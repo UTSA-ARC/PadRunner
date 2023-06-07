@@ -1,31 +1,31 @@
  #! PYTHON DOES NOT HONOR CONSTANTS SO YOU HAVE TO INSTEAD
 
 from typing import Any # For typehinting
-from commands import * # For command dictionary
- 
-PINS: dict[str, int] = {
-    
+from commands import * # For command headers
+
+PINS: dict[str, int] = { # Pin Dict
+
     'BottleFillPin' : 4,
     'TankFillPin' : 27,
     'VentPin' : 22,
     'GOXPin' : 24,
     'IgnitePin' : 22
-    
+
 }
 
-COMMANDS: dict[str, Any] = {
-    
+COMMANDS: dict[str, Any] = { # Command dict
+
     #* Do not edit position of help commands
     '?': list_commands,
     'help': list_commands,
-    
+
     'fill bottle': fill_bottle,
     'fill tank': fill_tank,
     'start gox': start_gox,
     'stop gox': stop_gox,
     'ignite': ignite,
-    'stop ignition': stop_ignition     
-                            
+    'stop ignition': stop_ignition
+
 }
 
 AutoGOXClose: bool = True

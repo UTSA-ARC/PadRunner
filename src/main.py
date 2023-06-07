@@ -1,58 +1,57 @@
-import RPi.GPIO as gpio
-import threading
-import queue
-from time import sleep
+import RPi.GPIO as gpio # GPIO access
+import threading # To run the console
+import queue # To run the console
+from time import sleep # For delays
 
-from config import *
-from commands import *
+from config import * # Import config, commands and Any type
 
-gpio.setmode(gpio.BOARD)
+gpio.setmode(gpio.BOARD) # Set rpi board
 
-#for pin in PINS.values(): # Iterate through relay pins and make each an output
-#    gpio.setup(pin, gpio.OUT)
+for pin in PINS.values(): # Iterate through relay pins and make each an output
+    gpio.setup(pin, gpio.OUT)
 
-try:
-    cmd_actions: dict[str, Any] = COMMANDS
-    cmd_queue: queue.Queue = queue.Queue()
-    stdout_lock: threading.Lock = threading.Lock()
+cmd_actions: dict[str, Any] = COMMANDS
+cmd_queue: queue.Queue = queue.Queue()
+stdout_lock: threading.Lock = threading.Lock()
 
-    input_thread = threading.Thread(target=console, args=(cmd_queue, stdout_lock))
-    print('Press enter for Input Mode\n')
-    input_thread.start()
+input_thread = threading.Thread(target=console, args=(cmd_queue, stdout_lock)) # Instantiate input thread
+print('Press Enter for Input Mode\n')
+input_thread.start()
 
-    while 1: # Main Loop
-        cmd = cmd_queue.get()
-        if cmd == 'quit':
-            break
-        
-        if cmd == '?' or cmd == 'help':
-            action: Any = cmd_actions.get(cmd, invalid_input)
-            action( stdout_lock, cmd_actions.keys() )
-            print('\nPress Enter for Input Mode\n')
-            continue
-            
-        action = cmd_actions.get(cmd, invalid_input)
+while 1: # Main Loop
+
+    cmd = cmd_queue.get() # Get command from console
+    if cmd == 'quit' or cmd == 'q': # If quit/q
+        break
+
+    if cmd == '?' or cmd == 'help': # If help/?
+        action: Any = cmd_actions.get(cmd, list_commands)
+        action( stdout_lock, cmd_actions.keys() )
+        print('\n------------')
+        print('Press Enter for Input Mode')
+        print('------------\n')
+        continue
+
+    action: Any = cmd_actions.get(cmd, list_commands) # Default operation
+    action(stdout_lock, PINS)
+
+    if cmd == 'start gox' and AutoIgniterOpen: # For Auto Ignition
+        sleep( IgniteDelay ) # Delay from GOX opening
+        cmd = 'ignite'
+        action = cmd_actions.get(cmd, list_commands)
         action(stdout_lock, PINS)
-        
-        if cmd == 'start gox' and AutoIgniterOpen:
-            sleep( IgniteDelay )
-            cmd = 'ignite'
-            action = cmd_actions.get(cmd, invalid_input)
-            action(stdout_lock, PINS)
-        
-        if cmd == 'ignite' and AutoGOXClose:
-            sleep( GOXCloseDelay )
-            cmd = 'stop gox'
-            action = cmd_actions.get(cmd, invalid_input)
-            action(stdout_lock, PINS)
-        
-        if cmd == 'stop gox' and AutoIgniterClose:
-            cmd = 'stop ignition'
-            action = cmd_actions.get(cmd, invalid_input)
-            action(stdout_lock, PINS)
-        
-        print('\nPress Enter for Input Mode\n')
 
-except KeyboardInterrupt:
-    print('\nCleaning up...\n')
-    gpio.cleanup()
+    if cmd == 'ignite' and AutoGOXClose: # For Auto GOX closing
+        sleep( GOXCloseDelay ) # Delay from Ignition
+        cmd = 'stop gox'
+        action = cmd_actions.get(cmd, list_commands)
+        action(stdout_lock, PINS)
+
+    if cmd == 'stop gox' and AutoIgniterClose: # For Auto Ignition closing
+        cmd = 'stop ignition'
+        action = cmd_actions.get(cmd, list_commands)
+        action(stdout_lock, PINS)
+
+    print('\n------------')
+    print('Press Enter for Input Mode')
+    print('------------\n')
