@@ -68,3 +68,6 @@ def stop_ignition(lock, pins) -> None: # Trigger to Stop Ignition Relay
         gpio.output( pin, True )
         states['Ignition'] = False
         print('--> Stopped Ignintion\n')
+
+def unknown_command(lock, pins):
+    print('--> Unknown command\n')        
