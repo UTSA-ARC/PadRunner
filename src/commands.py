@@ -1,4 +1,8 @@
-from triggers import * # Access gpio Calls
+import RPi.GPIO as gpio # GPIO Access
+
+states: dict[str, bool] = {} # For pin states
+
+def Get_State( key: str ) -> ( bool | None ): return states[key] # Get pin state
 
 def console(q, lock) -> None: # Console Thread
     while 1: # Thread inf loop
@@ -16,37 +20,51 @@ def list_commands(lock, commands) -> None: # List out all commands
         for key in commands:
             print( key + '\n' )
 
-def fill_bottle(lock, pins) -> None: # Call to Start Fill Bottle Relay
+def fill_bottle(lock, pins) -> None: # Trigger to Start Fill Bottle Relay
     with lock:
         print('--> Filling Bottle...\n')
-        Fill_Bottle( pins['BottleFillPin'] )
+        gpio.output( pins['BottleFillPin'], True )
+        states['FillBottle'] = True
+        print('--> Fill Bottle Pin Activated\n')
 
-def fill_tank (lock, pins) -> None: # Call Start Fill Tank Relay
+def fill_tank (lock, pins) -> None: # Trigger Start Fill Tank Relay
     with lock:
         print('--> Filling Tank...\n')
-        Fill_Tank( pins['TankFillPin'] )
+        gpio.output( pins['TankFillPin'], True )
+        states['FillTank'] = True
+        print('--> Fill Tank Pin Activated\n')
 
-def open_vent(lock, pins) -> None: # Call to Open Vent Relay
+def open_vent(lock, pins) -> None: # Trigger to Open Vent Relay
     with lock:
         print('--> Opening Vent...\n')
-        Open_Vent( pins['VentPin'] )
+        gpio.output( pins['VentPin'], True )
+        states['FillVent'] = True
+        print('--> Opened Vent\n')
 
-def start_gox(lock, pins) -> None: # Call to Open GOX Relay
+def start_gox(lock, pins) -> None: # Trigger to Open GOX Relay
     with lock:
         print('--> Flowing GOX...\n')
-        Start_GOX( pins['GOXPin'] )
+        gpio.output( pins['GOXPin'], True )
+        states['GOX'] = True
+        print('--> Started GOX\n')
 
-def stop_gox(lock, pins) -> None: # Call to Close GOX relay
+def stop_gox(lock, pins) -> None: # Trigger to Close GOX relay
     with lock:
         print('--> Stopping GOX...\n')
-        Stop_GOX( pins['GOXPin'] )
+        gpio.output( pins['GOXPin'], True )
+        states['GOX'] = False
+        print('--> Stopped GOX\n')
 
-def ignite(lock, pins) -> None: # Call to Start Ignition Relay
+def ignite(lock, pins) -> None: # Trigger to Start Ignition Relay
     with lock:
         print('--> Ignition!...\n')
-        Ignite( pins['IgnitePin'] )
+        gpio.output( pins['IgnitePin'], True)
+        states['Ignition'] = True
+        print('--> !!Ignition!!\n')
 
-def stop_ignition(lock, pins) -> None: # Call to Stop Ignition Relay
+def stop_ignition(lock, pins) -> None: # Trigger to Stop Ignition Relay
     with lock:
         print('--> Stopping Ignition...\n')
-        Stop_Ignition( pins['IgnitePin'] )
+        gpio.output( pin, True )
+        states['Ignition'] = False
+        print('--> Stopped Ignintion\n')
