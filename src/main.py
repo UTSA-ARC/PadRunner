@@ -8,8 +8,8 @@ from commands import *
 
 gpio.setmode(gpio.BOARD)
 
-for pin in PINS.values(): # Iterate through relay pins and make each an output
-    gpio.setup(pin, gpio.OUT)
+#for pin in PINS.values(): # Iterate through relay pins and make each an output
+#    gpio.setup(pin, gpio.OUT)
 
 try:
     cmd_actions: dict[str, Any] = COMMANDS
@@ -28,6 +28,7 @@ try:
         if cmd == '?' or cmd == 'help':
             action: Any = cmd_actions.get(cmd, invalid_input)
             action( stdout_lock, cmd_actions.keys() )
+            print('\nPress Enter for Input Mode\n')
             continue
             
         action = cmd_actions.get(cmd, invalid_input)
