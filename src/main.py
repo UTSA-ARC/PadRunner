@@ -7,8 +7,8 @@ from config import * # Import config, commands and Any type
 
 gpio.setmode(gpio.BOARD) # Set rpi board
 
-#for pin in PINS.values(): # Iterate through relay pins and make each an output
-#    gpio.setup(pin, gpio.OUT)
+for pin in PINS.values(): # Iterate through relay pins and make each an output
+    gpio.setup(pin, gpio.OUT)
 
 cmd_actions: dict[str, Any] = COMMANDS
 cmd_queue: queue.Queue = queue.Queue()

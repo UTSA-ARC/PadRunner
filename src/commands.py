@@ -38,7 +38,7 @@ def open_vent(lock, pins) -> None: # Trigger to Open Vent Relay
     with lock:
         print('--> Opening Vent...\n')
         gpio.output( pins['VentPin'], True )
-        states['FillVent'] = True
+        states['Vent'] = True
         print('--> Opened Vent\n')
 
 def start_gox(lock, pins) -> None: # Trigger to Open GOX Relay
@@ -65,9 +65,10 @@ def ignite(lock, pins) -> None: # Trigger to Start Ignition Relay
 def stop_ignition(lock, pins) -> None: # Trigger to Stop Ignition Relay
     with lock:
         print('--> Stopping Ignition...\n')
-        gpio.output( pin, True )
+        gpio.output( pins['IgnitePin'], True )
         states['Ignition'] = False
         print('--> Stopped Ignintion\n')
 
 def unknown_command(lock, pins):
-    print('--> Unknown command\n')        
+    with lock:
+        print('--> Unknown command\n')        
