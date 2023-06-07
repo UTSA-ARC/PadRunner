@@ -1,7 +1,7 @@
  #! PYTHON DOES NOT HONOR CONSTANTS SO YOU HAVE TO INSTEAD
 
 from typing import Any # For typehinting
-from commands import list_commands, fill_bottle, fill_tank, start_gox, stop_gox, ignite, stop_ignition # For command dictionary
+from commands import * # For command dictionary
  
 PINS: dict[str, int] = {
     
