@@ -15,7 +15,6 @@ PINS: dict[str, int] = { # Pin Dict
 
 COMMANDS: dict[str, Any] = { # Command dict
 
-    #* Do not edit position of help commands
     '?': list_commands,
     'help': list_commands,
 
