@@ -1,5 +1,4 @@
 from functions import *
-from config import PINS, COMMANDS
 
 def console(q, lock) -> None:
     while 1:
@@ -11,45 +10,46 @@ def console(q, lock) -> None:
         if cmd == 'quit':
             break
 
-def list_commands(lock) -> None:
-    print('--> Here is a list of all the registered commands')
-    for key in COMMANDS.keys():
-        print( key + '\n' )
+def list_commands(lock, commands) -> None:
+    with lock:
+        print('--> Here is a list of all the registered commands')
+        for key in commands:
+            print( key + '\n' )
 
-def fill_bottle(lock) -> None:
+def fill_bottle(lock, pins) -> None:
     with lock:
         print('--> Filling Bottle...\n')
-        Fill_Bottle( PINS.BottleFillPin )
+        Fill_Bottle( pins['BottleFillPin'] )
 
-def fill_tank (lock) -> None:
+def fill_tank (lock, pins) -> None:
     with lock:
         print('--> Filling Tank...\n')
-        Fill_Tank( PINS.TankFillPin )
+        Fill_Tank( pins['TankFillPin'] )
 
-def open_vent(lock) -> None:
+def open_vent(lock, pins) -> None:
     with lock:
         print('--> Opening Vent...\n')
-        Open_Vent( PINS.VentPin )
+        Open_Vent( pins['VentPin'] )
         
-def start_gox(lock) -> None:
+def start_gox(lock, pins) -> None:
     with lock:
         print('--> Flowing GOX...\n')
-        Start_GOX( PINS.GOXPin )
+        Start_GOX( pins['GOXPin'] )
         
-def stop_gox(lock) -> None:
+def stop_gox(lock, pins) -> None:
     with lock:
         print('--> Stopping GOX...\n')
-        Stop_GOX( PINS.GOXPin )
+        Stop_GOX( pins['GOXPin'] )
         
-def ignite(lock) -> None:
+def ignite(lock, pins) -> None:
     with lock:
         print('--> Ignition!...\n')
-        Ignite( PINS.IgnitePin )
+        Ignite( pins['IgnitePin'] )
         
-def stop_ignition(lock) -> None:
+def stop_ignition(lock, pins) -> None:
     with lock:
         print('--> Stopping Ignition...\n')
-        Stop_Ignition( PINS.IgnitePin )
+        Stop_Ignition( pins['IgnitePin'] )
 
 def invalid_input(lock) -> None:
     with lock:

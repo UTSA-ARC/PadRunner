@@ -8,8 +8,8 @@ from commands import *
 
 gpio.setmode(gpio.BOARD)
 
-for pin in PINS: # Iterate through relay pins and make each an output
-    gpio.setup(pin.value, gpio.OUT)
+for pin in PINS.values(): # Iterate through relay pins and make each an output
+    gpio.setup(pin, gpio.OUT)
 
 try:
     cmd_actions: dict[str, Any] = COMMANDS
@@ -24,26 +24,31 @@ try:
         cmd = cmd_queue.get()
         if cmd == 'quit':
             break
+        
+        if cmd == '?' or cmd == 'help':
+            action: Any = cmd_actions.get(cmd, invalid_input)
+            action( stdout_lock, cmd_actions.keys() )
+            continue
             
         action = cmd_actions.get(cmd, invalid_input)
-        action(stdout_lock)
+        action(stdout_lock, PINS)
         
         if cmd == 'start gox' and AutoIgniterOpen:
             sleep( IgniteDelay )
             cmd = 'ignite'
             action = cmd_actions.get(cmd, invalid_input)
-            action(stdout_lock)
+            action(stdout_lock, PINS)
         
         if cmd == 'ignite' and AutoGOXClose:
             sleep( GOXCloseDelay )
             cmd = 'stop gox'
             action = cmd_actions.get(cmd, invalid_input)
-            action(stdout_lock)
+            action(stdout_lock, PINS)
         
         if cmd == 'stop gox' and AutoIgniterClose:
             cmd = 'stop ignition'
             action = cmd_actions.get(cmd, invalid_input)
-            action(stdout_lock)
+            action(stdout_lock, PINS)
         
         print('\nPress Enter for Input Mode\n')
 

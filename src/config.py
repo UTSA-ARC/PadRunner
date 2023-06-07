@@ -1,22 +1,24 @@
  #! PYTHON DOES NOT HONOR CONSTANTS SO YOU HAVE TO INSTEAD
 
-from enum import IntEnum # For pins enum to be used as ints
 from typing import Any # For typehinting
-from commands import * # For command dictionary
+from commands import list_commands, fill_bottle, fill_tank, start_gox, stop_gox, ignite, stop_ignition # For command dictionary
  
-class PINS(IntEnum):
+PINS: dict[str, int] = {
     
-    BottleFillPin = 4
-    TankFillPin = 27
-    VentPin = 22
-    GOXPin = 24
-    IgnitePin = 22
+    'BottleFillPin' : 4,
+    'TankFillPin' : 27,
+    'VentPin' : 22,
+    'GOXPin' : 24,
+    'IgnitePin' : 22
     
+}
 
 COMMANDS: dict[str, Any] = {
     
+    #* Do not edit position of help commands
     '?': list_commands,
     'help': list_commands,
+    
     'fill bottle': fill_bottle,
     'fill tank': fill_tank,
     'start gox': start_gox,
