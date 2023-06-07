@@ -1,46 +1,52 @@
 import RPi.GPIO as gpio
-import time
 import threading
 import queue
+from time import sleep
 
 from config import *
-from functions import *
+from commands import *
 
 gpio.setmode(gpio.BOARD)
 
-for pin in PINS.values(): # Iterate through relay pins and make each an output
-    gpio.setup(pin, gpio.OUT)
+for pin in PINS: # Iterate through relay pins and make each an output
+    gpio.setup(pin.value, gpio.OUT)
 
 try:
-    
-    while True:
-        for x in range(5):
-            gpio.output(in1, True)
-            time.sleep(0.1)
-            gpio.output(in1, False)
-            gpio.output(in2, True)
-            time.sleep(0.1)
-            gpio.output(in2, False)
+    cmd_actions: dict[str, Any] = COMMANDS
+    cmd_queue: queue.Queue = queue.Queue()
+    stdout_lock: threading.Lock = threading.Lock()
+
+    input_thread = threading.Thread(target=console, args=(cmd_queue, stdout_lock))
+    print('Press enter for Input Mode\n')
+    input_thread.start()
+
+    while 1: # Main Loop
+        cmd = cmd_queue.get()
+        if cmd == 'quit':
+            break
+            
+        action = cmd_actions.get(cmd, invalid_input)
+        action(stdout_lock)
         
-
-        gpio.output(in1,True)
-        gpio.output(in2,True)
+        if cmd == 'start gox' and AutoIgniterOpen:
+            sleep( IgniteDelay )
+            cmd = 'ignite'
+            action = cmd_actions.get(cmd, invalid_input)
+            action(stdout_lock)
         
-
-        for x in range(4):
-            gpio.output(in1, True)
-            time.sleep(0.05)
-            gpio.output(in1, False)
-            time.sleep(0.05)
-        gpio.output(in1,True)
-
-        for x in range(4):
-            gpio.output(in2, True)
-            time.sleep(0.05)
-            gpio.output(in2, False)
-            time.sleep(0.05)
-        gpio.output(in2,True)
+        if cmd == 'ignite' and AutoGOXClose:
+            sleep( GOXCloseDelay )
+            cmd = 'stop gox'
+            action = cmd_actions.get(cmd, invalid_input)
+            action(stdout_lock)
+        
+        if cmd == 'stop gox' and AutoIgniterClose:
+            cmd = 'stop ignition'
+            action = cmd_actions.get(cmd, invalid_input)
+            action(stdout_lock)
+        
+        print('\nPress Enter for Input Mode\n')
 
 except KeyboardInterrupt:
-    
+    print('\nCleaning up...\n')
     gpio.cleanup()
