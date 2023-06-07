@@ -1,8 +1,9 @@
 import RPi.GPIO as gpio # GPIO Access
+from typing import Union
 
 states: dict[str, bool] = {} # For pin states
 
-def Get_State( key: str ) -> ( bool | None ): return states[key] # Get pin state
+def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
 def console(q, lock) -> None: # Console Thread
     while 1: # Thread inf loop
@@ -11,7 +12,7 @@ def console(q, lock) -> None: # Console Thread
             cmd = input('> ')
 
         q.put(cmd)
-        if cmd == 'quit' or cmd == 'q':
+        if cmd in ['quit', 'q']:
             break
 
 def list_commands(lock, commands) -> None: # List out all commands

@@ -21,10 +21,10 @@ input_thread.start()
 while 1: # Main Loop
 
     cmd = cmd_queue.get() # Get command from console
-    if cmd == 'quit' or cmd == 'q': # If quit/q
+    if cmd in ['quit', 'q']: # If quit/q
         break
 
-    if cmd == '?' or cmd == 'help': # If help/?
+    if cmd in ['?', 'help']: # If help/?
         action: Any = cmd_actions.get(cmd, unknown_command)
         action( stdout_lock, cmd_actions.keys() )
         print('\n------------')
