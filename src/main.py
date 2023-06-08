@@ -17,6 +17,16 @@ print('All Set!\n')
 
 if host_ip_address == '':
     host_ip_address: str = input('Enter your host IP Address: ') # Gets host ip address if not set
+    
+print('\nAre these values correct?\n')
+print(f'Watchdog Timeout: {watchdog_timout_delay}')
+print(f'Ignition Delay (after GOX open): {IgnitionDelay}')
+print(f'GOX Close Delay: {GOXCloseDelay}')
+    
+confirm_config = input('\n[Y/n]: ')
+
+if confirm_config == 'n':
+    exit()
 
 stop_event: threading.Event = threading.Event() # Stop Event handler
 
@@ -59,7 +69,7 @@ try:
 
         if cmd == 'auto ignition': # Auto Ignition Sequence
             open_gox(PINS)
-            sleep( IgniteDelay )
+            sleep( IgnitionDelay )
             ignition(PINS)
             sleep( GOXCloseDelay )
             close_gox(PINS)

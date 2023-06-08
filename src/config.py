@@ -10,7 +10,7 @@ watchdog_timout_delay: float = 60 #* In Seconds
 host_ip_address: str = ''
 
 GOXCloseDelay: float = 1.5 #* In Seconds
-IgniteDelay: float = 0.25 #* In Seconds
+IgnitionDelay: float = 0.25 #* In Seconds
 
 PINS: dict[str, int] = { # Pin Dict
 
