@@ -9,6 +9,7 @@ def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin s
 def console(q, lock) -> None: # Console Thread
     while 1: # Thread inf loop
         with lock:
+            input()
             cmd = input('> ')
             cmd = cmd.lower() # Lowercase it all
 
