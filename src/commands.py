@@ -20,6 +20,9 @@ def Default_Pins( pi, pins ) -> None: # Defaults all pins
     pi.write( pins['TankValvePin'], False )
     pi.write( pins['GOXValvePin'], False )
     pi.write( pins['VentValvePin'], False )
+    pi.write( pins['IgnitionPin'], False )
+    pi.write( pins['ArmingPin'], False )
+    
     print("Defaulted Pins...\n")
 
 def console() -> str: # Console Input
