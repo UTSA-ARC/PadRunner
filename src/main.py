@@ -25,6 +25,8 @@ input_thread = threading.Thread(target=console, args=(cmd_queue, stdout_lock)) #
 
 enter_txt: str = '\n------------\nPress Enter for Input Mode\n------------\n'
 
+Default_Pins()
+
 print(enter_txt)
 input_thread.start()
 
@@ -35,7 +37,9 @@ while 1: # Main Loop
      #   cmd = 'abort'
         
     if cmd in ['quit', 'q']: # If quit/q
-        gpio.cleanup()
+        exit_program(stdout_lock, PINS) # Exit Command Thread
+        input_thread.join()
+        watchdog_thread.join()
         break
 
     if cmd in ['?', 'help']: # If help/?
@@ -43,7 +47,7 @@ while 1: # Main Loop
         print(enter_txt)
         continue
 
-    if not armed and ( cmd in ['open gox valve', 'ignition', 'auto ignition'] ):
+    if not armed and ( cmd in ['open gox valve', 'start ignition', 'auto ignition'] ):
         print('--> IGNITION IS NOT ARMED\n')
         print(enter_txt)
         continue
@@ -69,3 +73,4 @@ while 1: # Main Loop
         print('-->!!ABORTED!!\n')
 
     print(enter_txt)
+

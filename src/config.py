@@ -8,11 +8,11 @@ host_ip_address: str = ''
 
 PINS: dict[str, int] = { # Pin Dict
 
-    'BottleFillPin' : 4,
-    'TankFillPin' : 27,
-    'VentPin' : 22,
-    'GOXPin' : 24,
-    'IgnitePin' : 25
+    'BottleValvePin' : 4,
+    'TankValvePin' : 27,
+    'VentValvePin' : 22,
+    'GOXValvePin' : 24,
+    'IgnitionPin' : 25
 
 }
 
@@ -20,6 +20,8 @@ FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
 
     '?': list_commands,
     'help': list_commands,
+    'q': exit_program,
+    'quit':exit_program,
 
     'open bottle valve': open_bottle_valve,
     'close bottle valve': close_bottle_valve,
@@ -29,13 +31,14 @@ FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
     'close gox valve': close_gox,
     'open vent valve': open_vent,
     'close vent valve': close_vent,
-    'ignition': ignition,
+    'start ignition': ignition,
     'stop ignition': stop_ignition,
     
     'arm ignition': arm_ignition,
     'auto ignition': auto_ignition,
     'abort': abort,
     
+    'get pins': get_pins,
     'get pin states': get_pin_states,
     'check if armed': check_armed 
 
