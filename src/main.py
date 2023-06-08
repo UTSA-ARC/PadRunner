@@ -11,6 +11,7 @@ def exit_message():
     stop_event.set()
     watchdog_thread.join()
     pi.stop()
+    exit()
 
 print(motd)
 
