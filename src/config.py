@@ -3,8 +3,13 @@
 from typing import Any # For typehinting
 from commands import * # For command headers
 
+motd: str = '\n------------\n~~ARC Ground Support PI Software~~\n------------\n'
+
 watchdog_timout_delay: float = 60 #* In Seconds
 host_ip_address: str = ''
+
+GOXCloseDelay: float = 1.5 #* In Seconds
+IgniteDelay: float = 0.25 #* In Seconds
 
 PINS: dict[str, int] = { # Pin Dict
 
@@ -20,8 +25,10 @@ FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
 
     '?': list_commands,
     'help': list_commands,
-    'q': '',
-    'quit':'',
+    'q': None,
+    'quit': None,
+    'clear': clear,
+    'cls': clear,
 
     'open bottle valve': open_bottle_valve,
     'close bottle valve': close_bottle_valve,
@@ -35,6 +42,7 @@ FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
     'stop ignition': stop_ignition,
     
     'arm ignition': arm_ignition,
+    'disarm ignition': disarm_ignition,
     'auto ignition': auto_ignition,
     'abort': abort,
     
@@ -43,6 +51,3 @@ FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
     'check if armed': check_armed 
 
 }
-
-GOXCloseDelay: float = 1.5 #* In Seconds
-IgniteDelay: float = 0.25 #* In Seconds

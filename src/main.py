@@ -6,10 +6,14 @@ from time import sleep # For delays
 from config import * # Import config, commands and Any type
 from watchdog import check_connection # Check connection
 
+print(motd)
+
+print('Setting up RPI board...\n')
 gpio.setmode(gpio.BCM) # Set rpi board
 
 for pin in PINS.values(): # Iterate through relay pins and make each an output
     gpio.setup(pin, gpio.OUT)
+print('All Set!\n')
 
 if host_ip_address == '':
     host_ip_address: str = input('Enter your host IP Address: ') # Gets host ip address if not set
@@ -22,60 +26,53 @@ watchdog_thread = threading.Thread(target=check_connection, args=(stop_event, wa
 watchdog_thread.start()
 print("Started Watchdog Timer...\n")
 
-cmd_actions: dict[str, Any] = FUNCTION_COMMANDS
-cmd_queue: queue.Queue = queue.Queue()
-stdout_lock: threading.Lock = threading.Lock()
-input_thread = threading.Thread(target=console, args=(stop_event, cmd_queue, stdout_lock)) # Instantiate input thread
-
-enter_txt: str = '\n------------\nPress Enter for Input Mode\n------------\n'
-
 Default_Pins( PINS )
 
-print(enter_txt)
-input_thread.start()
+try:
+    while 1: # Main Loop
 
-while 1: # Main Loop
+        cmd = console() # Get command from console
+        if watchdog_queue.get() == 'abort': # If connectivity is lost, abort
+            cmd = 'abort'
+            
+        if cmd in ['quit', 'q']: # If quit/q
+            stop_event.set()
+            watchdog_thread.join()
+            gpio.cleanup()
+            break
 
-    cmd = cmd_queue.get() # Get command from console
-    if watchdog_queue.get() == 'abort': # If connectivity is lost, abort
-        cmd = 'abort'
+        if cmd in ['?', 'help']: # If help/?
+            list_commands(FUNCTION_COMMANDS.keys())
+            continue
+
+        if not armed and ( cmd in ['open gox valve', 'start ignition', 'auto ignition'] ):
+            print('--> IGNITION IS NOT ARMED\n')
+            continue
         
-    if cmd in ['quit', 'q']: # If quit/q
-        stop_event.set()
-        watchdog_thread.join()
-        input_thread.join()
-        break
-
-    if cmd in ['?', 'help']: # If help/?
-        list_commands(stdout_lock, cmd_actions.keys())
-        print(enter_txt)
-        continue
-
-    if not armed and ( cmd in ['open gox valve', 'start ignition', 'auto ignition'] ):
-        print('--> IGNITION IS NOT ARMED\n')
-        print(enter_txt)
-        continue
-    
-    action: Any = cmd_actions.get(cmd, unknown_command) # Default operation
-    action(stdout_lock, PINS)
-    
-    if cmd == 'auto ignition':
-        open_gox(stdout_lock, PINS)
-        sleep( IgniteDelay )
-        ignition(stdout_lock, PINS)
-        sleep( GOXCloseDelay )
-        close_gox(stdout_lock, PINS)
-        stop_ignition(stdout_lock, PINS)
-        print('--> Auto Ignition Sequence Completed\n')
+        action: Any = FUNCTION_COMMANDS.get(cmd, unknown_command) # Default operation
+        action( PINS )
         
-    if cmd == 'abort':
-        close_bottle_valve(stdout_lock, PINS)
-        close_tank_valve(stdout_lock, PINS)
-        close_gox(stdout_lock, PINS)
-        stop_ignition(stdout_lock, PINS)
-        open_vent(stdout_lock, PINS)
-        print('-->!!ABORTED!!\n')
-
-    print(enter_txt)
-
-gpio.cleanup()
+        if action == clear:
+            print(motd)
+            
+        if cmd == 'auto ignition':
+            open_gox(PINS)
+            sleep( IgniteDelay )
+            ignition(PINS)
+            sleep( GOXCloseDelay )
+            close_gox(PINS)
+            stop_ignition(PINS)
+            print('--> Auto Ignition Sequence Completed\n')
+            
+        if cmd == 'abort':
+            close_bottle_valve(PINS)
+            close_tank_valve(PINS)
+            close_gox(PINS)
+            stop_ignition(PINS)
+            open_vent(PINS)
+            print('-->!!ABORTED!!\n')
+        
+except KeyboardInterrupt:
+    stop_event.set()
+    watchdog_thread.join()
+    gpio.cleanup()
