@@ -83,6 +83,7 @@ try:
             stop_ignition( pi, PINS )
             close_bottle_valve( pi, PINS )
             close_tank_valve( pi, PINS )
+            open_vent( pi, PINS )
             print('--> Auto Ignition Sequence Completed\n')
 
         if cmd.__contains__('abort'): # All Abort Sequences
