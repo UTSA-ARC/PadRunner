@@ -17,7 +17,7 @@ quit_program: bool = False
 
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
-def Default_Pins() -> None:
+def Default_Pins( pins ) -> None:
     gpio.output( pins['BottleValvePin'], False )
     gpio.output( pins['TankValvePin'], False )
     gpio.output( pins['GOXValvePin'], False )

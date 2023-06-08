@@ -25,7 +25,7 @@ input_thread = threading.Thread(target=console, args=(cmd_queue, stdout_lock)) #
 
 enter_txt: str = '\n------------\nPress Enter for Input Mode\n------------\n'
 
-Default_Pins()
+Default_Pins( PINS )
 
 print(enter_txt)
 input_thread.start()
