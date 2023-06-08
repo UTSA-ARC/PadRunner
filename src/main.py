@@ -5,7 +5,7 @@ from time import sleep # For delays
 
 from config import * # Import config, commands and Any type
 
-gpio.setmode(gpio.BOARD) # Set rpi board
+gpio.setmode(gpio.BCM) # Set rpi board
 
 for pin in PINS.values(): # Iterate through relay pins and make each an output
     gpio.setup(pin, gpio.OUT)
@@ -22,6 +22,7 @@ while 1: # Main Loop
 
     cmd = cmd_queue.get() # Get command from console
     if cmd in ['quit', 'q']: # If quit/q
+        gpio.cleanup()
         break
 
     if cmd in ['?', 'help']: # If help/?

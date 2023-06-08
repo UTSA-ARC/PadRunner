@@ -9,7 +9,7 @@ PINS: dict[str, int] = { # Pin Dict
     'TankFillPin' : 27,
     'VentPin' : 22,
     'GOXPin' : 24,
-    'IgnitePin' : 22
+    'IgnitePin' : 25
 
 }
 
