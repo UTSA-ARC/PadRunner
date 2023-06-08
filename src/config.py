@@ -3,6 +3,9 @@
 from typing import Any # For typehinting
 from commands import * # For command headers
 
+watchdog_timout_delay: int = 60 #* In Seconds
+host_ip_address: str = ''
+
 PINS: dict[str, int] = { # Pin Dict
 
     'BottleFillPin' : 4,
@@ -13,23 +16,27 @@ PINS: dict[str, int] = { # Pin Dict
 
 }
 
-COMMANDS: dict[str, Any] = { # Command dict
+FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
 
     '?': list_commands,
     'help': list_commands,
 
-    'fill bottle': fill_bottle,
-    'fill tank': fill_tank,
-    'start gox': start_gox,
-    'stop gox': stop_gox,
-    'ignite': ignite,
-    'stop ignition': stop_ignition
+    'open bottle valve': bottle_valve,
+    'open tank valve': tank_valve,
+    'open gox valve': open_gox,
+    'close gox valve': close_gox,
+    'open vent valve': open_vent,
+    'close vent valve': close_vent,
+    'ignition': ignition,
+    'stop ignition': stop_ignition,
+    
+    'auto ignition': auto_ignition,
+    'abort': abort,
+    
+    'get pin states': get_pin_states,
+    'check if armed': check_armed 
 
 }
-
-AutoGOXClose: bool = True
-AutoIgniterOpen: bool =  True
-AutoIgniterClose: bool = True
 
 GOXCloseDelay: float = 1.5 #* In Seconds
 IgniteDelay: float = 0.25 #* In Seconds
