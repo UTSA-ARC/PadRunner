@@ -5,6 +5,7 @@ from commands import * # For command headers
 
 
 motd: str = '\n------------\n~~ARC Ground Support PI Software~~\n------------\n'
+
 watchdog_timout_delay: float = 60 #* In Seconds
 host_ip_address: str = ''
 
@@ -25,6 +26,7 @@ PINS: dict[str, int] = { # Pin Dict
 COMMANDS: dict[Any, Any] = { # Command dict
 
 #*  ('Command', 'Description'): function_name
+
     ('?', 'Help Screen'): list_commands,
     ('help', 'Help Screen'): list_commands,
     ('q', 'Quit'): None,

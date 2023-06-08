@@ -15,7 +15,7 @@ states: dict[str, bool] = { # For pin states
 
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
-def Default_Pins( pins ) -> None:
+def Default_Pins( pins ) -> None: # Defaults all pins
     gpio.output( pins['BottleValvePin'], False )
     gpio.output( pins['TankValvePin'], False )
     gpio.output( pins['GOXValvePin'], False )
@@ -23,8 +23,7 @@ def Default_Pins( pins ) -> None:
     print("Defaulted Pins...\n")
 
 def console() -> str: # Console Input
-    cmd = input('> ').lower()
-    return cmd
+    return input('> ').lower()
 
 def clear( pins ) -> None: # Clear Console
     system('clear')
@@ -117,15 +116,15 @@ def get_pins( pins ) -> None: # Get Pins
     print(pins)
     print('\n')
 
-def get_pin_states( pins ) -> None:
+def get_pin_states( pins ) -> None: # Get Pin States 
     print('--> Getting Pin States...\n')
     print(states)
     print('\n')
     
-def check_armed( pins ) -> None:
+def check_armed( pins ) -> None: # Check if Armed
     print('--> Checking If Armed...\n')
     print(Get_State('ArmingTrigger'))
     print('\n')
 
-def unknown_command( pins ):
+def unknown_command( pins ): # If no valid command
     print('--> Unknown command\n')        

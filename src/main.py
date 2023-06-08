@@ -18,7 +18,7 @@ print('All Set!\n')
 if host_ip_address == '':
     host_ip_address: str = input('Enter your host IP Address: ') # Gets host ip address if not set
 
-stop_event: threading.Event = threading.Event()
+stop_event: threading.Event = threading.Event() # Stop Event handler
 
 watchdog_queue: queue.Queue = queue.Queue()
 watchdog_lock: threading.Lock = threading.Lock()
@@ -31,10 +31,7 @@ Default_Pins( PINS )
 try:
     while 1: # Main Loop
 
-        cmd = console() # Get command from console
-        if watchdog_queue.get() == 'abort': # If connectivity is lost, abort
-            cmd = 'abort'
-            
+        cmd = 'abort' if watchdog_queue.get() == 'abort' else console() # If connectivity is lost, exit
         if cmd in ['quit', 'q', 'exit']: # If quit/q
             stop_event.set()
             watchdog_thread.join()
@@ -45,22 +42,22 @@ try:
             list_commands(COMMANDS.keys())
             continue
 
-        if not Get_State('ArmingTrigger') and ( cmd in ['open gox valve', 'start ignition', 'auto ignition'] ):
+        if not Get_State('ArmingTrigger') and ( cmd in ['open gox valve', 'start ignition', 'auto ignition'] ): # If not armed
             print('--> IGNITION IS NOT ARMED\n')
             continue
-        
-        action: Any = unknown_command
+
+        action: Any = unknown_command # Default to unknown
         for com in list(COMMANDS.keys()):
             if com[0] == cmd:
-                action: Any = COMMANDS.get(com)
+                action: Any = COMMANDS.get(com) # If command exists in list
                 break
-            
+
         action( PINS )
-        
-        if action == clear:
+
+        if action == clear: # Clear with motd
             print(motd)
-            
-        if cmd == 'auto ignition':
+
+        if cmd == 'auto ignition': # Auto Ignition Sequence
             open_gox(PINS)
             sleep( IgniteDelay )
             ignition(PINS)
@@ -68,8 +65,8 @@ try:
             close_gox(PINS)
             stop_ignition(PINS)
             print('--> Auto Ignition Sequence Completed\n')
-            
-        if cmd.__contains__('abort'):
+
+        if cmd.__contains__('abort'): # All Abort Sequences
             close_bottle_valve(PINS)
             close_tank_valve(PINS)
             close_gox(PINS)
@@ -77,14 +74,14 @@ try:
             open_vent(PINS)
             disarm_ignition(PINS)
             print('-->!!ABORTED!!\n')
-            
-            if not cmd.__contains__('soft'):
+
+            if not cmd.__contains__('soft'): # If NOT 'Soft Abort' Sequence
                 stop_event.set()
                 watchdog_thread.join()
                 gpio.cleanup()
                 break
-            
-        
+
+
 except KeyboardInterrupt:
     stop_event.set()
     watchdog_thread.join()
