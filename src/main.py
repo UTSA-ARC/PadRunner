@@ -96,6 +96,7 @@ try:
             print('-->!!ABORTED!!\n')
 
             if not cmd.__contains__('soft'): # If NOT 'Soft Abort' Sequence
+                system('touch ./ABORTED')
                 exit_message()
                 break
 
