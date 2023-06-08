@@ -1,6 +1,7 @@
 import RPi.GPIO as gpio # GPIO Access
 from typing import Union
 from os import system
+import readline
 
 states: dict[str, bool] = { # For pin states
     
