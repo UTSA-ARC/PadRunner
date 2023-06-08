@@ -1,10 +1,10 @@
  #! PYTHON DOES NOT HONOR CONSTANTS SO YOU HAVE TO INSTEAD
 
-from typing import Any # For typehinting
+from typing import Any, Tuple, Union # For typehinting
 from commands import * # For command headers
 
-motd: str = '\n------------\n~~ARC Ground Support PI Software~~\n------------\n'
 
+motd: str = '\n------------\n~~ARC Ground Support PI Software~~\n------------\n'
 watchdog_timout_delay: float = 60 #* In Seconds
 host_ip_address: str = ''
 
@@ -17,37 +17,40 @@ PINS: dict[str, int] = { # Pin Dict
     'TankValvePin' : 27,
     'VentValvePin' : 22,
     'GOXValvePin' : 24,
-    'IgnitionPin' : 25
+    'IgnitionPin' : 25,
+    'ArmingPin': 26
 
 }
 
-FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
+COMMANDS: dict[Any, Any] = { # Command dict
 
-    '?': list_commands,
-    'help': list_commands,
-    'q': None,
-    'quit': None,
-    'clear': clear,
-    'cls': clear,
+#*  ('Command', 'Description'): function_name
+    ('?', 'Help Screen'): list_commands,
+    ('help', 'Help Screen'): list_commands,
+    ('q', 'Quit'): None,
+    ('quit', 'Quit'): None,
+    ('exit', 'Quit'): None,
+    ('clear', 'Clear Screen'): clear,
+    ('cls', 'Clear Screen'): clear,
 
-    'open bottle valve': open_bottle_valve,
-    'close bottle valve': close_bottle_valve,
-    'open tank valve': open_tank_valve,
-    'close tank valve': close_tank_valve,
-    'open gox valve': open_gox,
-    'close gox valve': close_gox,
-    'open vent valve': open_vent,
-    'close vent valve': close_vent,
-    'start ignition': ignition,
-    'stop ignition': stop_ignition,
+    ('open bottle valve', 'Opens Bottle Valve'): open_bottle_valve,
+    ('close bottle valve', 'Closes Bottle Valve'): close_bottle_valve,
+    ('open tank valve', 'Opens Tank Valve'): open_tank_valve,
+    ('close tank valve', 'Closes Tank Valve'): close_tank_valve,
+    ('open gox valve', 'Opens GOX Valve'): open_gox,
+    ('close gox valve', 'Closes GOX Valve'): close_gox,
+    ('open vent valve', 'Opens Vent Valve'): open_vent,
+    ('close vent valve', 'Closes Vent Valve'): close_vent,
+    ('start ignition', 'Triggers Ignition Start'): ignition,
+    ('stop ignition', 'Triggers Ignition Stop'): stop_ignition,
+     
+    ('arm ignition','Arms Ignition Sequence'): arm_ignition,
+    ('disarm ignition','Disarms Igninition Sequence'): disarm_ignition,
+    ('auto ignition','Automatically Perform Igniton Sequence'): auto_ignition,
+    ('abort','Abort All Processes'): abort,
     
-    'arm ignition': arm_ignition,
-    'disarm ignition': disarm_ignition,
-    'auto ignition': auto_ignition,
-    'abort': abort,
-    
-    'get pins': get_pins,
-    'get pin states': get_pin_states,
-    'check if armed': check_armed 
+    ('get pins', 'Get dict of pins'): get_pins,
+    ('get pin states', 'Get states of pins') : get_pin_states,
+    ('check if armed', 'Check if Ignition Sequence is Armed'): check_armed
 
 }

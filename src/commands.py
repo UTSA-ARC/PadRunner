@@ -13,8 +13,6 @@ states: dict[str, bool] = { # For pin states
     
     }
 
-armed: bool = False
-
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
 def Default_Pins( pins ) -> None:
@@ -34,7 +32,7 @@ def clear( pins ) -> None: # Clear Console
 def list_commands( commands ) -> None: # List out all commands
     print('--> Here is a list of all the registered commands: ')
     for key in commands:
-        print( key + '\n' )
+        print( f'{key[0]} - {key[1]}\n' )
 
 def open_bottle_valve( pins ) -> None: # Trigger to Open Bottle Relay
     print('--> Opening Bottle Valve...\n')
@@ -58,32 +56,32 @@ def close_tank_valve( pins ) -> None: # Trigger Open Tank Relay
     print('--> Closed Tank Valve...\n')
     gpio.output( pins['TankValvePin'], False )
     states['TankValve'] = False
-    print('--> Closed Tank Valve\n')
+    print('--> Tank Valve Closed\n')
 
 def close_vent( pins ) -> None: # Trigger to Close Vent Relay
     print('--> Closing Vent...\n')
     gpio.output( pins['VentValvePin'], True )
     states['VentValve'] = True
-    print('--> Closed Vent\n')
+    print('--> Vent Closed\n')
         
 def open_vent( pins ) -> None: # Trigger to Open Vent Relay
     print('--> Opening Vent...\n')
     gpio.output( pins['VentValvePin'], False )
     states['VentValve'] = False
-    print('--> Opened Vent\n')
+    print('--> Vent Opened\n')
 
 
 def open_gox( pins ) -> None: # Trigger to Open GOX Relay
     print('--> Flowing GOX...\n')
     gpio.output( pins['GOXValvePin'], True )
     states['GOXValve'] = True
-    print('--> Started GOX\n')
+    print('--> GOX Opened\n')
 
 def close_gox( pins ) -> None: # Trigger to Close GOX relay
-    print('--> Stopping GOX...\n')
+    print('--> Closing GOX...\n')
     gpio.output( pins['GOXValvePin'], False )
     states['GOXValve'] = False
-    print('--> Stopped GOX\n')
+    print('--> GOX Closed\n')
 
 def ignition( pins ) -> None: # Trigger to Start Ignition Relay
     print('--> Ignition!...\n')
@@ -95,24 +93,23 @@ def stop_ignition( pins ) -> None: # Trigger to Stop Ignition Relay
     print('--> Stopping Ignition...\n')
     gpio.output( pins['IgnitionPin'], False )
     states['IgnitionTrigger'] = False
-    print('--> Stopped Ignintion\n')
+    print('--> Ignition Stopped\n')
         
 def arm_ignition( pins ) -> None: # Arm Ignition Sequence
     print('--> Arming Ignition Sequence...\n')
-    armed = True
+    gpio.output( pins['ArmingPin'], True )
     states['ArmingTrigger'] = True
-    print('--> Armed Ignition Sequence\n')
+    print('--> Ignition Sequence Armed\n')
     
 def disarm_ignition( pins ) -> None: # Arm Ignition Sequence
     print('--> Disarming Ignition Sequence...\n')
-    armed = False
     states['ArmingTrigger'] = False
-    print('--> Disarmed Ignition Sequence\n')
+    print('--> Ignition Sequence Disarmed\n')
         
 def auto_ignition( pins ) -> None: # Auto Ignition Sequence
     print('--> Auto Ignition Sequence Initiated!...\n')
         
-def abort() -> None: # Abort Sequence
+def abort( pins ) -> None: # Abort Sequence
     print('--> !!ABORTING!!...\n')
         
 def get_pins( pins ) -> None: # Get Pins
@@ -127,7 +124,7 @@ def get_pin_states( pins ) -> None:
     
 def check_armed( pins ) -> None:
     print('--> Checking If Armed...\n')
-    print(armed)
+    print(Get_State('ArmingTrigger'))
     print('\n')
 
 def unknown_command( pins ):

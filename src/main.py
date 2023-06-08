@@ -35,21 +35,26 @@ try:
         if watchdog_queue.get() == 'abort': # If connectivity is lost, abort
             cmd = 'abort'
             
-        if cmd in ['quit', 'q']: # If quit/q
+        if cmd in ['quit', 'q', 'exit']: # If quit/q
             stop_event.set()
             watchdog_thread.join()
             gpio.cleanup()
             break
 
         if cmd in ['?', 'help']: # If help/?
-            list_commands(FUNCTION_COMMANDS.keys())
+            list_commands(COMMANDS.keys())
             continue
 
-        if not armed and ( cmd in ['open gox valve', 'start ignition', 'auto ignition'] ):
+        if not Get_State('ArmingTrigger') and ( cmd in ['open gox valve', 'start ignition', 'auto ignition'] ):
             print('--> IGNITION IS NOT ARMED\n')
             continue
         
-        action: Any = FUNCTION_COMMANDS.get(cmd, unknown_command) # Default operation
+        action: Any = unknown_command
+        for com in list(COMMANDS.keys()):
+            if com[0] == cmd:
+                action: Any = COMMANDS.get(com)
+                break
+            
         action( PINS )
         
         if action == clear:
@@ -70,6 +75,7 @@ try:
             close_gox(PINS)
             stop_ignition(PINS)
             open_vent(PINS)
+            disarm_ignition(PINS)
             print('-->!!ABORTED!!\n')
         
 except KeyboardInterrupt:
