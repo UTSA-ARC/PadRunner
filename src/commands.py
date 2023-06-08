@@ -40,8 +40,6 @@ def exit_program(lock, pins) -> None: # Exit Program
 def list_commands(lock, commands) -> None: # List out all commands
     with lock:
         print('--> Here is a list of all the registered commands')
-        print( 'q' + '\n' )
-        print( 'quit' + '\n' )
         for key in commands:
             print( key + '\n' )
 
