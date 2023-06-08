@@ -47,7 +47,8 @@ COMMANDS: dict[Any, Any] = { # Command dict
     ('arm ignition','Arms Ignition Sequence'): arm_ignition,
     ('disarm ignition','Disarms Igninition Sequence'): disarm_ignition,
     ('auto ignition','Automatically Perform Igniton Sequence'): auto_ignition,
-    ('abort','Abort All Processes'): abort,
+    ('abort','Abort All Processes and Exit Program'): abort,
+    ('soft abort', 'Only Abort All Processes' ): abort,
     
     ('get pins', 'Get dict of pins'): get_pins,
     ('get pin states', 'Get states of pins') : get_pin_states,

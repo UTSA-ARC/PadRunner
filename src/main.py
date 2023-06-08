@@ -69,7 +69,7 @@ try:
             stop_ignition(PINS)
             print('--> Auto Ignition Sequence Completed\n')
             
-        if cmd == 'abort':
+        if cmd.__contains__('abort'):
             close_bottle_valve(PINS)
             close_tank_valve(PINS)
             close_gox(PINS)
@@ -77,6 +77,13 @@ try:
             open_vent(PINS)
             disarm_ignition(PINS)
             print('-->!!ABORTED!!\n')
+            
+            if not cmd.__contains__('soft'):
+                stop_event.set()
+                watchdog_thread.join()
+                gpio.cleanup()
+                break
+            
         
 except KeyboardInterrupt:
     stop_event.set()
