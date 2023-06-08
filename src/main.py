@@ -26,9 +26,9 @@ if host_ip_address == '':
     host_ip_address: str = input('Enter your host IP Address: ') # Gets host ip address if not set
     
 print('\nAre these values correct?\n')
-print(f'Watchdog Timeout: {watchdog_timout_delay}')
-print(f'Ignition Delay (after GOX open): {IgnitionDelay}')
-print(f'GOX Close Delay: {GOXCloseDelay}')
+print(f'Watchdog Timeout: {watchdog_timout_delay} seconds')
+print(f'Ignition Delay (after GOX open): {IgnitionDelay} seconds')
+print(f'GOX Close Delay: {GOXCloseDelay} seconds')
     
 confirm_config = input('\n[Y/n]: ')
 
