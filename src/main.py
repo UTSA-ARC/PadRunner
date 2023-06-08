@@ -38,8 +38,6 @@ while 1: # Main Loop
         
     if cmd in ['quit', 'q']: # If quit/q
         exit_program(stdout_lock, PINS) # Exit Command Thread
-        input_thread.join()
-        watchdog_thread.join()
         break
 
     if cmd in ['?', 'help']: # If help/?

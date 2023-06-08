@@ -25,11 +25,10 @@ def Default_Pins( pins ) -> None:
 
 def console(q, lock) -> None: # Console Thread
     while 1: # Thread inf loop
+        input()
         with lock:
-            input()
-            cmd = input('> ')
-            cmd = cmd.lower() # Lowercase it all
-
+            cmd = input('> ').lower()
+            
         q.put(cmd)
         if cmd in ['quit', 'q']:
             break
