@@ -15,7 +15,7 @@ if host_ip_address is None:
     host_ip_address: str = input('Enter your host IP Address: ') # Gets host ip address if not set
 watchdog_queue: queue.Queue = queue.Queue()
 watchdog_thread = threading.Thread(target=check_connection, args=(watchdog_queue, host_ip_address, watchdog_timout_delay)) # Instantiate watchdog thread
-watchdog_thread.start()
+#watchdog_thread.start()
 print("Started Watchdog Timer...\n")
 
 cmd_actions: dict[str, Any] = FUNCTION_COMMANDS
@@ -32,8 +32,8 @@ input_thread.start()
 while 1: # Main Loop
 
     cmd = cmd_queue.get() # Get command from console
-    if watchdog_queue.get() is not None: # If connectivity is lost, abort
-        cmd = 'abort'
+    #if watchdog_queue.get() is not None: # If connectivity is lost, abort
+     #   cmd = 'abort'
         
     if cmd in ['quit', 'q']: # If quit/q
         gpio.cleanup()
