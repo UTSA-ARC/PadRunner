@@ -13,7 +13,6 @@ states: dict[str, bool] = { # For pin states
     }
 
 armed: bool = False
-quit_program: bool = False
 
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
@@ -25,17 +24,18 @@ def Default_Pins( pins ) -> None:
     print("Defaulted Pins\n")
 
 def console(q, lock) -> None: # Console Thread
-    while quit_program != True: # Thread inf loop
+    while 1: # Thread inf loop
         with lock:
             input()
             cmd = input('> ')
             cmd = cmd.lower() # Lowercase it all
 
         q.put(cmd)
+        if cmd in ['quit', 'q']:
+            break
 
 def exit_program(lock, pins) -> None: # Exit Program
     with lock:
-        quit_program = True
         print('--> Exiting program...\n')
 
 def list_commands(lock, commands) -> None: # List out all commands
