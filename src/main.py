@@ -24,9 +24,10 @@ for pin in PINS.values(): # Iterate through relay pins and make each an output
 print('All Set!\n')
 
 if host_ip_address == '':
-    host_ip_address: str = input('Enter your host IP Address: ') # Gets host ip address if not set
+    host_ip_address: str = input('Enter your host ip Address/hostname: ') # Gets host ip address if not set
     
 print('\nAre these values correct?\n')
+print(f'Host ip address/hostname: {host_ip_address}')
 print(f'Watchdog Timeout: {watchdog_timout_delay} seconds')
 print(f'Ignition Delay (after GOX open): {IgnitionDelay} seconds')
 print(f'GOX Close Delay: {GOXCloseDelay} seconds')
