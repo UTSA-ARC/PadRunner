@@ -18,23 +18,10 @@ watchdog_thread = threading.Thread(target=check_connection, args=(watchdog_queue
 #watchdog_thread.start()
 print("Started Watchdog Timer...\n")
 
-cmd_actions: dict[str, Any] = FUNCTION_COMMANDS
-cmd_queue: queue.Queue = queue.Queue()
-stdout_lock: threading.Lock = threading.Lock()
-input_thread = threading.Thread(target=console, args=(cmd_queue, stdout_lock)) # Instantiate input thread
-
 enter_txt: str = '\n------------\nPress Enter for Input Mode\n------------\n'
 
 print(enter_txt)
 input_thread.start()
-
-close_bottle_valve(stdout_lock, PINS)
-close_tank_valve(stdout_lock, PINS)
-close_gox(stdout_lock, PINS)
-stop_ignition(stdout_lock, PINS)
-open_vent(stdout_lock, PINS)
-print('Defaulted all Pins')
-
 
 while 1: # Main Loop
 

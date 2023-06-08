@@ -35,8 +35,8 @@ def open_bottle_valve(lock, pins) -> None: # Trigger to Open Bottle Relay
 def close_bottle_valve(lock, pins) -> None: # Trigger to Open Bottle Relay
     with lock:
         print('--> Stopping Bottle valve...\n')
-        gpio.output( pins['BottleFillPin'], True )
-        states['FillBottle'] = True
+        gpio.output( pins['BottleFillPin'], False )
+        states['FillBottle'] = False
         print('--> Bottle Valve Closed')
 
 def open_tank_valve(lock, pins) -> None: # Trigger Open Tank Relay
@@ -49,8 +49,8 @@ def open_tank_valve(lock, pins) -> None: # Trigger Open Tank Relay
 def close_tank_valve(lock, pins) -> None: # Trigger Open Tank Relay
     with lock:
         print('--> Closed Tank Valve...\n')
-        gpio.output( pins['TankFillPin'], True )
-        states['FillTank'] = True
+        gpio.output( pins['TankFillPin'], False )
+        states['FillTank'] = False
         print('--> Closed Tank Valve\n')
 
 def close_vent(lock, pins) -> None: # Trigger to Close Vent Relay
@@ -64,7 +64,7 @@ def open_vent(lock, pins) -> None: # Trigger to Open Vent Relay
     with lock:
         print('--> Opening Vent...\n')
         gpio.output( pins['VentPin'], False )
-        states['Vent'] = True
+        states['Vent'] = False
         print('--> Opened Vent\n')
 
 
@@ -78,21 +78,21 @@ def open_gox(lock, pins) -> None: # Trigger to Open GOX Relay
 def close_gox(lock, pins) -> None: # Trigger to Close GOX relay
     with lock:
         print('--> Stopping GOX...\n')
-        gpio.output( pins['GOXPin'], True )
+        gpio.output( pins['GOXPin'], False )
         states['GOX'] = False
         print('--> Stopped GOX\n')
 
 def ignition(lock, pins) -> None: # Trigger to Start Ignition Relay
     with lock:
         print('--> Ignition!...\n')
-        gpio.output( pins['IgnitePin'], True)
+        gpio.output( pins['IgnitePin'], True )
         states['Ignition'] = True
         print('--> !!Ignition!!\n')
 
 def stop_ignition(lock, pins) -> None: # Trigger to Stop Ignition Relay
     with lock:
         print('--> Stopping Ignition...\n')
-        gpio.output( pins['IgnitePin'], True )
+        gpio.output( pins['IgnitePin'], False )
         states['Ignition'] = False
         print('--> Stopped Ignintion\n')
         
