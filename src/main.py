@@ -1,4 +1,4 @@
-import RPi.GPIO as gpio # GPIO access
+import pigpio # GPIO access
 import threading # To run the console
 import queue # To run the console
 from time import sleep # For delays
@@ -9,10 +9,11 @@ from watchdog import check_connection # Check connection
 print(motd)
 
 print('Setting up RPI board...\n')
-gpio.setmode(gpio.BCM) # Set rpi board
+pi = pigpio.pi() # Set rpi board
 
 for pin in PINS.values(): # Iterate through relay pins and make each an output
-    gpio.setup(pin, gpio.OUT)
+    pi.set_mode(pin, pigpio.OUTPUT)
+    
 print('All Set!\n')
 
 if host_ip_address == '':
@@ -36,7 +37,7 @@ watchdog_thread = threading.Thread(target=check_connection, args=(stop_event, wa
 watchdog_thread.start()
 print("Started Watchdog Timer...\n")
 
-Default_Pins( PINS )
+Default_Pins( pi, PINS )
 
 try:
     while 1: # Main Loop
@@ -45,7 +46,7 @@ try:
         if cmd in ['quit', 'q', 'exit']: # If quit/q
             stop_event.set()
             watchdog_thread.join()
-            gpio.cleanup()
+            pi.stop()
             break
 
         if cmd in ['?', 'help']: # If help/?
@@ -62,37 +63,37 @@ try:
                 action: Any = COMMANDS.get(com) # If command exists in list
                 break
 
-        action( PINS )
+        action( pi, PINS )
 
         if action == clear: # Clear with motd
             print(motd)
 
         if cmd == 'auto ignition': # Auto Ignition Sequence
-            open_gox(PINS)
+            open_gox( pi, PINS )
             sleep( IgnitionDelay )
-            ignition(PINS)
+            ignition( pi, PINS )
             sleep( GOXCloseDelay )
-            close_gox(PINS)
-            stop_ignition(PINS)
+            close_gox( pi, PINS )
+            stop_ignition( pi, PINS )
             print('--> Auto Ignition Sequence Completed\n')
 
         if cmd.__contains__('abort'): # All Abort Sequences
-            close_bottle_valve(PINS)
-            close_tank_valve(PINS)
-            close_gox(PINS)
-            stop_ignition(PINS)
-            open_vent(PINS)
-            disarm_ignition(PINS)
+            close_bottle_valve( pi, PINS )
+            close_tank_valve( pi, PINS )
+            close_gox( pi, PINS )
+            stop_ignition( pi, PINS )
+            open_vent( pi, PINS )
+            disarm_ignition( pi, PINS )
             print('-->!!ABORTED!!\n')
 
             if not cmd.__contains__('soft'): # If NOT 'Soft Abort' Sequence
                 stop_event.set()
                 watchdog_thread.join()
-                gpio.cleanup()
+                pi.stop()
                 break
 
 
-except KeyboardInterrupt:
+except Exception:
     stop_event.set()
     watchdog_thread.join()
-    gpio.cleanup()
+    pi.stop()
