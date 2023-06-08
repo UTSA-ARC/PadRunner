@@ -62,7 +62,6 @@ while 1: # Main Loop
         print('--> Auto Ignition Sequence Completed\n')
         
     if cmd == 'abort':
-        ignition(stdout_lock, PINS)
         close_gox(stdout_lock, PINS)
         stop_ignition(stdout_lock, PINS)
         open_vent(stdout_lock, PINS)

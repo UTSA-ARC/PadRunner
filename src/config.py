@@ -21,8 +21,10 @@ FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
     '?': list_commands,
     'help': list_commands,
 
-    'open bottle valve': bottle_valve,
-    'open tank valve': tank_valve,
+    'open bottle valve': open_bottle_valve,
+    'close bottle valve': close_bottle_valve,
+    'open tank valve': open_tank_valve,
+    'close tank valve': close_tank_valve,
     'open gox valve': open_gox,
     'close gox valve': close_gox,
     'open vent valve': open_vent,
@@ -30,6 +32,7 @@ FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
     'ignition': ignition,
     'stop ignition': stop_ignition,
     
+    'arm ignition': arm_ignition,
     'auto ignition': auto_ignition,
     'abort': abort,
     

@@ -8,7 +8,6 @@ def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin s
 
 def console(q, lock) -> None: # Console Thread
     while 1: # Thread inf loop
-        input()   # After pressing Enter you'll be in "input mode"
         with lock:
             cmd = input('> ')
             cmd = cmd.lower() # Lowercase it all
@@ -25,19 +24,33 @@ def list_commands(lock, commands) -> None: # List out all commands
         for key in commands:
             print( key + '\n' )
 
-def bottle_valve(lock, pins) -> None: # Trigger to Open Bottle Relay
+def open_bottle_valve(lock, pins) -> None: # Trigger to Open Bottle Relay
     with lock:
-        print('--> Filling Bottle...\n')
+        print('--> Opening Bottle Valve...\n')
         gpio.output( pins['BottleFillPin'], True )
         states['FillBottle'] = True
-        print('--> Fill Bottle Pin Activated\n')
+        print('--> Bottle Valve Opened\n')
 
-def tank_valve(lock, pins) -> None: # Trigger Open Tank Relay
+def close_bottle_valve(lock, pins) -> None: # Trigger to Open Bottle Relay
     with lock:
-        print('--> Filling Tank...\n')
+        print('--> Stopping Bottle valve...\n')
+        gpio.output( pins['BottleFillPin'], True )
+        states['FillBottle'] = True
+        print('--> Bottle Valve Closed')
+
+def open_tank_valve(lock, pins) -> None: # Trigger Open Tank Relay
+    with lock:
+        print('--> Opened Tank Valve...\n')
         gpio.output( pins['TankFillPin'], True )
         states['FillTank'] = True
-        print('--> Fill Tank Pin Activated\n')
+        print('--> Fill Tank Pin Opened\n')
+        
+def close_tank_valve(lock, pins) -> None: # Trigger Open Tank Relay
+    with lock:
+        print('--> Closed Tank Valve...\n')
+        gpio.output( pins['TankFillPin'], True )
+        states['FillTank'] = True
+        print('--> Closed Tank Valve\n')
 
 def close_vent(lock, pins) -> None: # Trigger to Close Vent Relay
     with lock:
