@@ -3,7 +3,7 @@
 from typing import Any # For typehinting
 from commands import * # For command headers
 
-watchdog_timout_delay: int = 60 #* In Seconds
+watchdog_timout_delay: float = 60 #* In Seconds
 host_ip_address: str = ''
 
 PINS: dict[str, int] = { # Pin Dict
@@ -20,8 +20,8 @@ FUNCTION_COMMANDS: dict[str, Any] = { # Command dict
 
     '?': list_commands,
     'help': list_commands,
-    'q': exit_program,
-    'quit':exit_program,
+    'q': '',
+    'quit':'',
 
     'open bottle valve': open_bottle_valve,
     'close bottle valve': close_bottle_valve,

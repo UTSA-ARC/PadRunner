@@ -11,17 +11,21 @@ gpio.setmode(gpio.BCM) # Set rpi board
 for pin in PINS.values(): # Iterate through relay pins and make each an output
     gpio.setup(pin, gpio.OUT)
 
-if host_ip_address is None:
+if host_ip_address == '':
     host_ip_address: str = input('Enter your host IP Address: ') # Gets host ip address if not set
+
+stop_event: threading.Event = threading.Event()
+
 watchdog_queue: queue.Queue = queue.Queue()
-watchdog_thread = threading.Thread(target=check_connection, args=(watchdog_queue, host_ip_address, watchdog_timout_delay)) # Instantiate watchdog thread
-#watchdog_thread.start()
+watchdog_lock: threading.Lock = threading.Lock()
+watchdog_thread = threading.Thread(target=check_connection, args=(stop_event, watchdog_queue, watchdog_lock, host_ip_address, watchdog_timout_delay)) # Instantiate watchdog thread
+watchdog_thread.start()
 print("Started Watchdog Timer...\n")
 
 cmd_actions: dict[str, Any] = FUNCTION_COMMANDS
 cmd_queue: queue.Queue = queue.Queue()
 stdout_lock: threading.Lock = threading.Lock()
-input_thread = threading.Thread(target=console, args=(cmd_queue, stdout_lock)) # Instantiate input thread
+input_thread = threading.Thread(target=console, args=(stop_event, cmd_queue, stdout_lock)) # Instantiate input thread
 
 enter_txt: str = '\n------------\nPress Enter for Input Mode\n------------\n'
 
@@ -33,11 +37,13 @@ input_thread.start()
 while 1: # Main Loop
 
     cmd = cmd_queue.get() # Get command from console
-    #if watchdog_queue.get() is not None: # If connectivity is lost, abort
-     #   cmd = 'abort'
+    if watchdog_queue.get() == 'abort': # If connectivity is lost, abort
+        cmd = 'abort'
         
     if cmd in ['quit', 'q']: # If quit/q
-        exit_program(stdout_lock, PINS) # Exit Command Thread
+        stop_event.set()
+        watchdog_thread.join()
+        input_thread.join()
         break
 
     if cmd in ['?', 'help']: # If help/?
@@ -72,3 +78,4 @@ while 1: # Main Loop
 
     print(enter_txt)
 
+gpio.cleanup()

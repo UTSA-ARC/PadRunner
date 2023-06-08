@@ -23,19 +23,14 @@ def Default_Pins( pins ) -> None:
     gpio.output( pins['VentValvePin'], False )
     print("Defaulted Pins\n")
 
-def console(q, lock) -> None: # Console Thread
+def console(stop, q, lock) -> None: # Console Thread
     while 1: # Thread inf loop
         input()
         with lock:
             cmd = input('> ').lower()
-            
-        q.put(cmd)
-        if cmd in ['quit', 'q']:
+            q.put(cmd)
+        if cmd in ['q', 'quit']:
             break
-
-def exit_program(lock, pins) -> None: # Exit Program
-    with lock:
-        print('--> Exiting program...\n')
 
 def list_commands(lock, commands) -> None: # List out all commands
     with lock:
