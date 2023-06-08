@@ -28,6 +28,13 @@ enter_txt: str = '\n------------\nPress Enter for Input Mode\n------------\n'
 print(enter_txt)
 input_thread.start()
 
+close_bottle_valve(stdout_lock, PINS)
+close_tank_valve(stdout_lock, PINS)
+close_gox(stdout_lock, PINS)
+stop_ignition(stdout_lock, PINS)
+open_vent(stdout_lock, PINS)
+print('Defaulted all Pins')
+
 
 while 1: # Main Loop
 
@@ -62,6 +69,8 @@ while 1: # Main Loop
         print('--> Auto Ignition Sequence Completed\n')
         
     if cmd == 'abort':
+        close_bottle_valve(stdout_lock, PINS)
+        close_tank_valve(stdout_lock, PINS)
         close_gox(stdout_lock, PINS)
         stop_ignition(stdout_lock, PINS)
         open_vent(stdout_lock, PINS)
