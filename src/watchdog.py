@@ -16,7 +16,7 @@ def ping(host, timeout):
 
     # Option for the number of packets as a function of
     param = '-n' if platform.system().lower()=='windows' else '-c'
-    param += f'-W {timeout}'
+    param += f'1 -W {timeout}'
 
     # Building the command. Ex: "ping -c 1 google.com"
     command = ['ping', param, '1', host]
