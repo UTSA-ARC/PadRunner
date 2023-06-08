@@ -99,6 +99,5 @@ try:
                 exit_message()
                 break
 
-
 except Exception:
     exit_message()
