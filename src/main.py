@@ -6,6 +6,12 @@ from time import sleep # For delays
 from config import * # Import config, commands and Any type
 from watchdog import check_connection # Check connection
 
+def exit_message():
+    print('\nByee!!')
+    stop_event.set()
+    watchdog_thread.join()
+    pi.stop()
+
 print(motd)
 
 print('Setting up RPI board...\n')
@@ -27,6 +33,7 @@ print(f'GOX Close Delay: {GOXCloseDelay}')
 confirm_config = input('\n[Y/n]: ')
 
 if confirm_config == 'n':
+    print('Please edit `config.py`')
     exit()
 
 stop_event: threading.Event = threading.Event() # Stop Event handler
@@ -44,9 +51,7 @@ try:
 
         cmd = 'abort' if watchdog_queue.get() == 'abort' else console() # If connectivity is lost, exit
         if cmd in ['quit', 'q', 'exit']: # If quit/q
-            stop_event.set()
-            watchdog_thread.join()
-            pi.stop()
+            exit_message()
             break
 
         if cmd in ['?', 'help']: # If help/?
@@ -87,13 +92,9 @@ try:
             print('-->!!ABORTED!!\n')
 
             if not cmd.__contains__('soft'): # If NOT 'Soft Abort' Sequence
-                stop_event.set()
-                watchdog_thread.join()
-                pi.stop()
+                exit_message()
                 break
 
 
 except Exception:
-    stop_event.set()
-    watchdog_thread.join()
-    pi.stop()
+    exit_message()
