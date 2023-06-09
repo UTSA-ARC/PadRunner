@@ -6,10 +6,10 @@ from commands import * # For command headers
 
 motd: str = '\n------------\n~~ARC Ground Support PI Software~~\n------------\n'
 
-watchdog_timout_delay: float = 1 #* In Seconds
+watchdog_timout_delay: float = 60 #* In Seconds
 host_ip_address: str = ''
 
-GOXCloseDelay: float = 1.5 #* In Seconds
+GOXCloseDelay: float = 3.0 #* In Seconds
 IgnitionDelay: float = 0.25 #* In Seconds
 
 PINS: dict[str, int] = { # Pin Dict
