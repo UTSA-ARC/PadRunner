@@ -8,7 +8,8 @@ then
     rm ./ABORTED
 fi
 
-./.venv/bin/python ./src/main.py
+screen -A -m -d -S picode ./.venv/bin/python ./src/main.py
+screen -r
 
 cd $hd
 unset hd
