@@ -8,8 +8,9 @@ from watchdog import check_connection # Check connection
 
 def exit_message():
     print('\nByee!!')
-    stop_event.set()
-    watchdog_thread.join()
+    if enable_watchdog:
+        stop_event.set()
+        watchdog_thread.join()
     pi.stop()
     exit()
 
@@ -23,12 +24,15 @@ for pin in PINS.values(): # Iterate through relay pins and make each an output
     
 print('All Set!\n')
 
-if host_ip_address == '':
+if enable_watchdog and host_ip_address == '':
     host_ip_address: str = input('Enter your host ip Address/hostname: ') # Gets host ip address if not set
     
 print('\nAre these values correct?\n')
-print(f'Host ip address/hostname: {host_ip_address}')
-print(f'Watchdog Timeout: {watchdog_timout_delay} seconds')
+
+print(f'Watchdog Enable: {enable_watchdog}')
+if enable_watchdog: 
+    print(f'Host ip address/hostname: {host_ip_address}')
+    print(f'Watchdog Timeout: {watchdog_timout_delay} seconds')
 print(f'Ignition Delay (after GOX open): {IgnitionDelay} seconds')
 print(f'GOX Close Delay: {GOXCloseDelay} seconds')
     
@@ -39,21 +43,25 @@ if confirm_config == 'n':
     exit()
 
 stop_event: threading.Event = threading.Event() # Stop Event handler
-
 watchdog_queue: queue.Queue = queue.Queue()
 watchdog_lock: threading.Lock = threading.Lock()
 watchdog_thread = threading.Thread(target=check_connection, args=(stop_event, watchdog_queue, watchdog_lock, host_ip_address, watchdog_timout_delay)) # Instantiate watchdog thread
-watchdog_thread.start()
-print("Started Watchdog Timer...\n")
+
+if enable_watchdog:
+    watchdog_thread.start()
+    print("Started Watchdog Timer...\n")
 
 Default_Pins( pi, PINS )
 
 try:
     while 1: # Main Loop
 
-        cmd = 'abort' if watchdog_queue.get() == 'abort' else console() # If connectivity is lost, exit
+        if enable_watchdog:
+            cmd: str = 'abort' if watchdog_queue.get() == 'abort' else console() # If connectivity is lost, exit
+        else:
+            cmd: str = console()
+            
         if cmd in ['quit', 'q', 'exit']: # If quit/q
-            exit_message()
             break
 
         if cmd in ['?', 'help']: # If help/?
@@ -98,8 +106,8 @@ try:
 
             if not cmd.__contains__('soft'): # If NOT 'Soft Abort' Sequence
                 system('touch ./ABORTED')
-                exit_message()
                 break
 
 except Exception:
-    exit_message()
+    sleep(0)
+exit_message()
