@@ -74,6 +74,7 @@ try:
         rt.start()
         
         cmd: str = input('> ').lower()
+        rt.cancel()
             
         if cmd in ['quit', 'q', 'exit']: # If quit/q
             break
