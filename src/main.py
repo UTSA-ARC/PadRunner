@@ -24,6 +24,7 @@ def check_wd(q):
     if q.get() == 'abort':
         Default_Pins( pi, PINS )
         print('-->!!ABORTED!!\n')
+        system('touch ./ABORTED')
         exit_message()
 
 print(motd)
