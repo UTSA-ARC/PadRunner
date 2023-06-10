@@ -10,9 +10,9 @@ states: dict[str, bool] = { # For pin states
     'IgnitionTrigger': False,
     'GOXValve': False,
     'ArmingTrigger': False,
+    'VentValve': False,
     'BottleValve': False,
     'TankValve': False,
-    'VentValve': False,
     
     }
 
@@ -25,6 +25,7 @@ def Default_Pins( pi, pins ) -> None: # Defaults all pins
     print("Defaulting pins...\n")
     
     stop_ignition( pi, pins )
+    close_gox( pi, pins )
     disarm_ignition( pi, pins )
     open_vent( pi, pins )
     close_bottle_valve( pi, pins )
@@ -44,7 +45,7 @@ def clear( pi, pins ) -> None: # Clear Console
     system('clear')
 
 def list_commands( commands ) -> None: # List out all commands
-    print('--> Here is a list of all the registered commands: ')
+    print('--> Here is a list of all the registered commands: \n')
     for key in commands:
         print( f'{key[0]} - {key[1]}\n' )
 
