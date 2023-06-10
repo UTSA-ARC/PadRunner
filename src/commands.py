@@ -21,7 +21,8 @@ cmd: str = ''
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
 def Default_Pins( pi, pins ) -> None: # Defaults all pins
-    print("Defaulting pins...")
+
+    print("Defaulting pins...\n")
     
     stop_ignition( pi, pins )
     disarm_ignition( pi, pins )
