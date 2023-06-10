@@ -105,6 +105,7 @@ def arm_ignition( pi, pins ) -> None: # Arm Ignition Sequence
     
 def disarm_ignition( pi, pins ) -> None: # Arm Ignition Sequence
     print('--> Disarming Ignition Sequence...\n')
+    pi.write( pins['ArmingPin'], False )
     states['ArmingTrigger'] = False
     print('--> Ignition Sequence Disarmed\n')
         
