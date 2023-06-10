@@ -6,9 +6,9 @@ from commands import * # For command headers
 
 motd: str = '\n------------\n~~ARC Ground Support PI Software~~\n------------\n'
 
-enable_watchdog: bool = True #* isable watchdog timer
-watchdog_check_interval = 10 
-watchdog_timout_delay: float = 60 #* In Seconds
+enable_watchdog: bool = True #* Disable watchdog timer
+watchdog_check_interval = 5  #* In Seconds
+watchdog_timout_delay: float = 1 #* In Seconds
 host_ip_address: str = ''
 
 GOXCloseDelay: float = 3.0 #* In Seconds

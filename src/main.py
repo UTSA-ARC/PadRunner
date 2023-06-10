@@ -2,9 +2,15 @@ import pigpio # GPIO access
 import threading # To run the console
 import queue # To run the console
 from time import sleep # For delays
+from os import _exit
 
 from config import * # Import config, commands and Any type
 from watchdog import check_connection # Check connection
+
+class RepeatTimer(Timer):
+    def run(self):
+        while not self.finished.wait(self.interval):
+            self.function(*self.args, **self.kwargs)
 
 def exit_message():
     print('\nByee!!')
@@ -12,7 +18,13 @@ def exit_message():
         stop_event.set()
         watchdog_thread.join()
     pi.stop()
-    exit()
+    _exit(0)
+
+def check_wd(q):
+    if q.get() == 'abort':
+        Default_Pins( pi, PINS )
+        print('-->!!ABORTED!!\n')
+        exit_message()
 
 print(motd)
 
@@ -40,7 +52,7 @@ confirm_config = input('\n[Y/n]: ')
 
 if confirm_config == 'n':
     print('Please edit `config.py`')
-    exit()
+    exit_message()
 
 stop_event: threading.Event = threading.Event() # Stop Event handler
 watchdog_queue: queue.Queue = queue.Queue()
@@ -54,12 +66,12 @@ if enable_watchdog:
 Default_Pins( pi, PINS )
 
 try:
-    while 1: # Main Loop
-
-        if enable_watchdog:
-            cmd: str = 'abort' if watchdog_queue.get() == 'abort' else console() # If connectivity is lost, exit
-        else:
-            cmd: str = console()
+    while not stop_event.is_set(): # Main Loop
+        
+        rt = RepeatTimer(watchdog_check_interval, check_wd, (watchdog_queue,))
+        rt.start()
+        
+        cmd: str = input('> ').lower()
             
         if cmd in ['quit', 'q', 'exit']: # If quit/q
             break

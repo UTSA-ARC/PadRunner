@@ -1,6 +1,9 @@
 from typing import Union
 from os import system
 from readline import set_pre_input_hook
+from threading import Timer
+from watchdog import check_connection
+from time import sleep
 
 states: dict[str, bool] = { # For pin states
     
@@ -13,6 +16,8 @@ states: dict[str, bool] = { # For pin states
     
     }
 
+cmd: str = ''
+
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
 def Default_Pins( pi, pins ) -> None: # Defaults all pins
@@ -24,9 +29,14 @@ def Default_Pins( pi, pins ) -> None: # Defaults all pins
     
     print("Defaulted Pins...\n")
 
-def console() -> str: # Console Input
-    return input('> ').lower()
-
+def check_wd(q):
+    print('Checking connection...')
+    r = q.get()
+    print(r)
+    if r == 'abort':
+        cmd = 'abort'
+        return cmd
+    
 def clear( pi, pins ) -> None: # Clear Console
     system('clear')
 
