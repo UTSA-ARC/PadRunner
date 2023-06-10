@@ -21,13 +21,15 @@ cmd: str = ''
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
 def Default_Pins( pi, pins ) -> None: # Defaults all pins
+    print("Defaulting pins...")
+    
     stop_ignition( pi, pins )
     disarm_ignition( pi, pins )
     open_vent( pi, pins )
     close_bottle_valve( pi, pins )
     close_tank_valve( pi, pins )
     
-    print("Defaulted Pins...\n")
+    print("...Defaulted Pins\n")
 
 def check_wd(q):
     print('Checking connection...')
