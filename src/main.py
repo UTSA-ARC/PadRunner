@@ -44,6 +44,7 @@ print('\nAre these values correct?\n')
 print(f'Watchdog Enable: {enable_watchdog}')
 if enable_watchdog: 
     print(f'Host ip address/hostname: {host_ip_address}')
+    print(f'Watchdog Check Interval: {watchdog_check_interval} seconds')
     print(f'Watchdog Timeout: {watchdog_timout_delay} seconds')
 print(f'Ignition Delay (after GOX open): {IgnitionDelay} seconds')
 print(f'GOX Close Delay: {GOXCloseDelay} seconds')
