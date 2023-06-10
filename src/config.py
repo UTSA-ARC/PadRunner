@@ -1,12 +1,13 @@
  #! PYTHON DOES NOT HONOR CONSTANTS SO YOU HAVE TO INSTEAD
 
-from typing import Any, Tuple, Union # For typehinting
+from typing import Any # For typehinting
 from commands import * # For command headers
 
 
 motd: str = '\n------------\n~~ARC Ground Support PI Software~~\n------------\n'
 
-enable_watchdog: bool = False #* disable watchdog timer
+enable_watchdog: bool = True #* isable watchdog timer
+watchdog_check_interval = 10 
 watchdog_timout_delay: float = 60 #* In Seconds
 host_ip_address: str = ''
 

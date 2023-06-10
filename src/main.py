@@ -82,26 +82,17 @@ try:
 
         if action == clear: # Clear with motd
             print(motd)
-
+            
         if cmd == 'auto ignition': # Auto Ignition Sequence
             open_gox( pi, PINS )
             sleep( IgnitionDelay )
             ignition( pi, PINS )
             sleep( GOXCloseDelay )
-            close_gox( pi, PINS )
-            stop_ignition( pi, PINS )
-            close_bottle_valve( pi, PINS )
-            close_tank_valve( pi, PINS )
-            open_vent( pi, PINS )
+            Default_Pins( pi, PINS )
             print('--> Auto Ignition Sequence Completed\n')
 
         if cmd.__contains__('abort'): # All Abort Sequences
-            close_bottle_valve( pi, PINS )
-            close_tank_valve( pi, PINS )
-            close_gox( pi, PINS )
-            stop_ignition( pi, PINS )
-            open_vent( pi, PINS )
-            disarm_ignition( pi, PINS )
+            Default_Pins( pi, PINS )
             print('-->!!ABORTED!!\n')
 
             if not cmd.__contains__('soft'): # If NOT 'Soft Abort' Sequence

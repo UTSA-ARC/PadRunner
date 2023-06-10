@@ -4,24 +4,23 @@ from readline import set_pre_input_hook
 
 states: dict[str, bool] = { # For pin states
     
+    'IgnitionTrigger': False,
+    'GOXValve': False,
+    'ArmingTrigger': False,
     'BottleValve': False,
     'TankValve': False,
     'VentValve': False,
-    'GOXValve': False,
-    'ArmingTrigger': False,
-    'IgnitionTrigger': False
     
     }
 
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
 def Default_Pins( pi, pins ) -> None: # Defaults all pins
-    pi.write( pins['BottleValvePin'], False )
-    pi.write( pins['TankValvePin'], False )
-    pi.write( pins['GOXValvePin'], False )
-    pi.write( pins['VentValvePin'], False )
-    pi.write( pins['IgnitionPin'], False )
-    pi.write( pins['ArmingPin'], False )
+    stop_ignition( pi, pins )
+    disarm_ignition( pi, pins )
+    open_vent( pi, pins )
+    close_bottle_valve( pi, pins )
+    close_tank_valve( pi, pins )
     
     print("Defaulted Pins...\n")
 
