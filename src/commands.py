@@ -120,6 +120,8 @@ def disarm_ignition( pi, pins ) -> None: # Arm Ignition Sequence
     print('--> Disarming Ignition Sequence...\n')
     pi.write( pins['ArmingPin'], False )
     states['ArmingTrigger'] = False
+    stop_ignition( pi, pins )
+    close_gox( pi, pins)
     print('--> Ignition Sequence Disarmed\n')
         
 def auto_ignition( pi, pins ) -> None: # Auto Ignition Sequence
