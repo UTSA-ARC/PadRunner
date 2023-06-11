@@ -5,10 +5,9 @@ from commands import * # For command headers
 
 motd: str = '\n------------\n~~ARC Ground Support PI Software~~\n------------\n'
 
-enable_watchdog: bool = True #* Disable watchdog timer
+enable_watchdog: bool = True #* Enable Watchdog Timer
 watchdog_check_interval: float = 1  #* In Seconds
 watchdog_timout_delay: float = 10 #* In Seconds
-host_ip_address: str = ''
 
 PinsCloseDelay: float = 3.0 #* In Seconds
 IgnitionDelay: float = 0.25 #* In Seconds

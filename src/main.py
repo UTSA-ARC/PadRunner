@@ -2,7 +2,6 @@ import pigpio # GPIO access
 import threading # To run the console
 from time import sleep # For delays
 from os import _exit
-from subprocess import getoutput
 
 from config import * # Import config, commands and Any type
 from watchdog import check_connection # Check connection
