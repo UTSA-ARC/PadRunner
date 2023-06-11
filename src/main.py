@@ -1,8 +1,8 @@
 import pigpio # GPIO access
 import threading # To run the console
-import queue # To run the console
 from time import sleep # For delays
 from os import _exit
+from subprocess import getoutput
 
 from config import * # Import config, commands and Any type
 from watchdog import check_connection # Check connection
@@ -20,8 +20,10 @@ def exit_message():
     pi.stop()
     _exit(0)
 
-def check_wd(q):
-    if q.get() == 'abort':
+def check_wd(s: list):
+    got = ''
+    if s.__len__() != 0 : got = s.pop()
+    if got == 'abort':
         Default_Pins( pi, PINS )
         print('-->!!ABORTED!!\n')
         system('touch ./ABORTED')
@@ -36,19 +38,15 @@ for pin in PINS.values(): # Iterate through relay pins and make each an output
     pi.set_mode(pin, pigpio.OUTPUT)
     
 print('All Set!\n')
-
-if enable_watchdog and host_ip_address == '':
-    host_ip_address: str = input('Enter your host ip Address/hostname: ') # Gets host ip address if not set
     
 print('\nAre these values correct?\n')
 
 print(f'Watchdog Enable: {enable_watchdog}')
-if enable_watchdog: 
-    print(f'Host ip address/hostname: {host_ip_address}')
+if enable_watchdog:
     print(f'Watchdog Check Interval: {watchdog_check_interval} seconds')
-    print(f'Watchdog Timeout: {watchdog_timout_delay} seconds')
-print(f'Ignition Delay (after GOX open): {IgnitionDelay} seconds')
-print(f'GOX Close Delay: {GOXCloseDelay} seconds')
+    print(f'Watchdog Timeout: {watchdog_timout_delay} seconds\n')
+print(f'Ignition Delay (After GOX Opens): {IgnitionDelay} seconds')
+print(f'Pins Close Delay (After Ignition): {PinsCloseDelay} seconds')
     
 confirm_config = input('\n[Y/n]: ')
 
@@ -57,9 +55,9 @@ if confirm_config == 'n':
     exit_message()
 
 stop_event: threading.Event = threading.Event() # Stop Event handler
-watchdog_queue: queue.Queue = queue.Queue()
+watchdog_stack: list = []
 watchdog_lock: threading.Lock = threading.Lock()
-watchdog_thread = threading.Thread(target=check_connection, args=(stop_event, watchdog_queue, watchdog_lock, host_ip_address, watchdog_timout_delay)) # Instantiate watchdog thread
+watchdog_thread = threading.Thread(target=check_connection, args=(stop_event, watchdog_stack, watchdog_lock, watchdog_timout_delay)) # Instantiate watchdog thread
 
 if enable_watchdog:
     watchdog_thread.start()
@@ -70,7 +68,7 @@ Default_Pins( pi, PINS )
 try:
     while not stop_event.is_set(): # Main Loop
         
-        rt = RepeatTimer(watchdog_check_interval, check_wd, (watchdog_queue,))
+        rt = RepeatTimer(watchdog_check_interval, check_wd, (watchdog_stack,))
         rt.start()
         
         cmd: str = input('> ').lower()
@@ -100,9 +98,11 @@ try:
             
         if cmd == 'auto ignition': # Auto Ignition Sequence
             open_gox( pi, PINS )
+            print(f'Wating for {IgnitionDelay} seconds to ignite...')
             sleep( IgnitionDelay )
             ignition( pi, PINS )
-            sleep( GOXCloseDelay )
+            print(f'Waiting for {PinsCloseDelay} seconds to close pins')
+            sleep( PinsCloseDelay )
             Default_Pins( pi, PINS )
             print('--> Auto Ignition Sequence Completed\n')
 

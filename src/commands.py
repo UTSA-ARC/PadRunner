@@ -32,14 +32,6 @@ def Default_Pins( pi, pins ) -> None: # Defaults all pins
     close_tank_valve( pi, pins )
     
     print("...Defaulted Pins\n")
-
-def check_wd(q):
-    print('Checking connection...')
-    r = q.get()
-    print(r)
-    if r == 'abort':
-        cmd = 'abort'
-        return cmd
     
 def clear( pi, pins ) -> None: # Clear Console
     system('clear')
