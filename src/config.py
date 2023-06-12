@@ -3,14 +3,22 @@
 from typing import Any # For typehinting
 from commands import * # For command headers
 
-motd: str = '\n------------\n~~ARC Ground Support PI Software~~\n------------\n'
+MOTD: str = '''
+------------
+~~ARC Ground Support PI Software~~
+------------
+'''
 
-enable_watchdog: bool = True #* Enable Watchdog Timer
-watchdog_check_interval: float = 1  #* In Seconds
-watchdog_timout_delay: float = 60 #* In Seconds
+SECTION_SEP: str = '\n------------\n' 
 
-PinsCloseDelay: float = 3.0 #* In Seconds
-IgnitionDelay: float = 0.25 #* In Seconds
+Enable_Watchdog: bool = True #* Enable Watchdog Timer
+Watchdog_Check_Interval: float = 1  #* In Seconds
+Watchdog_Timout_Delay: float = 60 #* In Seconds
+
+Enable_Gox: bool = True #* Enable GOX valve
+GOX_Open_Delay: float = 0.25 #* In Seconds
+
+Pins_Close_Delay: float = 3.0 #* In Seconds
 
 PINS: dict[str, int] = { # Pin Dict
 

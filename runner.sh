@@ -3,12 +3,16 @@
 hd=$PWD
 cd ~/PICode
 
-if [ -e ./ABORTED ] 
+if [ -e ~/PICode/ABORTED ] 
 then
-    rm ./ABORTED
+    rm ~/PICode/ABORTED
 fi
 
-screen -A -m -d -S picode ./.venv/bin/python ./src/main.py
+if ! screen -list | grep -q "picode"
+then
+    screen -A -m -d -S picode ./.venv/bin/python ./src/main.py
+fi
+
 screen -r
 
 cd $hd

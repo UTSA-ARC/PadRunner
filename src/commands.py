@@ -1,9 +1,6 @@
 from typing import Union
 from os import system
 from readline import set_pre_input_hook
-from threading import Timer
-from watchdog import check_connection
-from time import sleep
 
 states: dict[str, bool] = { # For pin states
     
@@ -15,8 +12,6 @@ states: dict[str, bool] = { # For pin states
     'TankValve': False,
     
     }
-
-cmd: str = ''
 
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
 
@@ -31,9 +26,9 @@ def Default_Pins( pi, pins ) -> None: # Defaults all pins
     close_bottle_valve( pi, pins )
     close_tank_valve( pi, pins )
     
-    print("...Defaulted Pins\n")
+    print("...Defaulted Pins")
     
-def clear( pi, pins ) -> None: # Clear Console
+def clear( pi=None, pins=None ) -> None: # Clear Console
     system('clear')
 
 def list_commands( commands ) -> None: # List out all commands
