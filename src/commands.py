@@ -3,14 +3,14 @@ from os import system
 from readline import set_pre_input_hook
 
 states: dict[str, bool] = { # For pin states
-    
+
     'IgnitionTrigger': False,
     'GOXValve': False,
     'ArmingTrigger': False,
     'VentValve': False,
     'BottleValve': False,
     'TankValve': False,
-    
+
     }
 
 def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin state
@@ -18,16 +18,16 @@ def Get_State( key: str ) -> Union[ bool, None ]: return states[key] # Get pin s
 def Default_Pins( pi, pins ) -> None: # Defaults all pins
 
     print("Defaulting pins...\n")
-    
+
     stop_ignition( pi, pins )
     close_gox( pi, pins )
     disarm_ignition( pi, pins )
     open_vent( pi, pins )
     close_bottle_valve( pi, pins )
     close_tank_valve( pi, pins )
-    
+
     print("...Defaulted Pins\n")
-    
+
 def clear( pi=None, pins=None ) -> None: # Clear Console
     system('clear')
 
@@ -53,7 +53,7 @@ def open_tank_valve( pi, pins ) -> None: # Trigger Open Tank Relay
     pi.write( pins['TankValvePin'], True )
     states['TankValve'] = True
     print('--> Fill Tank Pin Opened\n')
-        
+
 def close_tank_valve( pi, pins ) -> None: # Trigger Open Tank Relay
     print('--> Closed Tank Valve...\n')
     pi.write( pins['TankValvePin'], False )
@@ -65,7 +65,7 @@ def close_vent( pi, pins ) -> None: # Trigger to Close Vent Relay
     pi.write( pins['VentValvePin'], True )
     states['VentValve'] = True
     print('--> Vent Closed\n')
-        
+
 def open_vent( pi, pins ) -> None: # Trigger to Open Vent Relay
     print('--> Opening Vent...\n')
     pi.write( pins['VentValvePin'], False )
@@ -96,13 +96,13 @@ def stop_ignition( pi, pins ) -> None: # Trigger to Stop Ignition Relay
     pi.write( pins['IgnitionPin'], False )
     states['IgnitionTrigger'] = False
     print('--> Ignition Stopped\n')
-        
+
 def arm_ignition( pi, pins ) -> None: # Arm Ignition Sequence
     print('--> Arming Ignition Sequence...\n')
     pi.write( pins['ArmingPin'], True )
     states['ArmingTrigger'] = True
     print('--> Ignition Sequence Armed\n')
-    
+
 def disarm_ignition( pi, pins ) -> None: # Arm Ignition Sequence
     print('--> Disarming Ignition Sequence...\n')
     pi.write( pins['ArmingPin'], False )
@@ -110,27 +110,27 @@ def disarm_ignition( pi, pins ) -> None: # Arm Ignition Sequence
     stop_ignition( pi, pins )
     close_gox( pi, pins)
     print('--> Ignition Sequence Disarmed\n')
-        
+
 def auto_ignition( pi, pins ) -> None: # Auto Ignition Sequence
     print('--> Auto Ignition Sequence Initiated!...\n')
-        
+
 def abort( pi, pins ) -> None: # Abort Sequence
     print('--> !!ABORTING!!...\n')
-        
+
 def get_pins( pi, pins ) -> None: # Get Pins
     print('--> Getting Pins...\n')
     print(pins)
     print('\n')
 
-def get_pin_states( pi, pins ) -> None: # Get Pin States 
+def get_pin_states( pi, pins ) -> None: # Get Pin States
     print('--> Getting Pin States...\n')
     print(states)
     print('\n')
-    
+
 def check_armed( pi, pins ) -> None: # Check if Armed
     print('--> Checking If Armed...\n')
     print(Get_State('ArmingTrigger'))
     print('\n')
 
 def unknown_command( pi, pins ): # If no valid command
-    print('--> Unknown command\n')        
+    print('--> Unknown command\n')

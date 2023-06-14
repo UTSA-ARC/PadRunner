@@ -15,10 +15,10 @@ def exit_message(hard_abort: bool = False, before_cmd: bool = False):
     if Enable_Watchdog:
         stop_event.set()
         watchdog_thread.join()
-        
+
     if not hard_abort and not before_cmd:
         Default_Pins( pi, PINS )
-        
+
     pi.stop()
     print(SECTION_SEP)
     print('Byee!!')
@@ -43,7 +43,7 @@ pi = pigpio.pi() # Set rpi board
 
 for pin in PINS.values(): # Iterate through relay pins and make each an output
     pi.set_mode(pin, pigpio.OUTPUT)
-    
+
 print('All Set!')
 print(SECTION_SEP)
 print('Are these values correct?\n')
@@ -52,9 +52,9 @@ print(f' -  Watchdog Enable: {Enable_Watchdog}')
 if Enable_Watchdog:
     print(f'        Watchdog Check Interval: {Watchdog_Check_Interval} seconds')
     print(f'        Watchdog Timeout: {Watchdog_Timout_Delay} seconds')
-    
+
     print()
-    
+
     print(f'  - GOX Enabled: {Enable_Gox}')
 if Enable_Gox:
     print(f'        GOX Open Delay (After Ignition): {GOX_Open_Delay} seconds\n')
@@ -62,14 +62,14 @@ if Enable_Gox:
 else:
     print()
     print(f'  - Pins Close Delay (After Ignition): {Pins_Close_Delay} seconds')
-    
+
 confirm_config = input('\n[Y/n]: ')
 
 if confirm_config == 'n':
     print('Please edit `config.py`')
     print(SECTION_SEP)
     exit_message(before_cmd=True)
-    
+
 print(SECTION_SEP)
 
 stop_event: th.Event = th.Event() # Stop Event handler
@@ -91,13 +91,13 @@ print(MOTD)
 
 try:
     while not stop_event.is_set(): # Main Loop
-        
+
         rt = RepeatTimer(Watchdog_Check_Interval, check_wd, (watchdog_stack,))
         rt.start()
-        
+
         cmd: str = input('> ').lower()
         rt.cancel()
-            
+
         if cmd in ['quit', 'q', 'exit']: # If quit/q
             break
 
@@ -108,7 +108,7 @@ try:
         if cmd.__contains__('gox') and not Enable_Gox:
             print('\n--> You do not have GOX enabled, please close the program edit `config.py` to enable it\n')
             continue
-        
+
         if not Get_State('ArmingTrigger') and ( cmd in ['open gox valve', 'start ignition', 'auto ignition'] ): # If not armed
             print('\n--> IGNITION IS NOT ARMED\n')
             continue
@@ -123,7 +123,7 @@ try:
 
         if action == clear: # Clear with motd
             print(MOTD)
-            
+
         if cmd == 'auto ignition': # Auto Ignition Sequence
             ignition( pi, PINS )
             if Enable_Gox:
