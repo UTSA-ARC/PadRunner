@@ -130,7 +130,7 @@ try:
                 print(f'Wating for {GOX_Open_Delay} seconds to open GOX...')
                 sleep( GOX_Open_Delay )
                 open_gox( pi, PINS )
-            print(f'Waiting for {Pins_Close_Delay} seconds to close pins')
+            print(f'Waiting for {Pins_Close_Delay} seconds to close pins...')
             sleep( Pins_Close_Delay )
             print(SECTION_SEP)
             Default_Pins( pi, PINS )
