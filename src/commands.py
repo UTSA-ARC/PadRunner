@@ -26,7 +26,7 @@ def Default_Pins( pi, pins ) -> None: # Defaults all pins
     close_bottle_valve( pi, pins )
     close_tank_valve( pi, pins )
     
-    print("...Defaulted Pins")
+    print("...Defaulted Pins\n")
     
 def clear( pi=None, pins=None ) -> None: # Clear Console
     system('clear')
