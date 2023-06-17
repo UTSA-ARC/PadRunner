@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "Checking if pigpiod is active..."
 pigpiod_status=$(systemctl is-active pigpiod)
