@@ -1,2 +1,2 @@
-# Rowdy Ground Station Program 
+# PadRunner
 A PI-based Ground station program
