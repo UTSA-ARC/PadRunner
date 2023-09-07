@@ -1,3 +1,2 @@
-# PICode
-
-Code for Ground Support for the RaspberryPi 3b+
+# Rowdy Ground Station Program 
+A PI-based Ground station program
