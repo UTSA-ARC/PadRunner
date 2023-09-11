@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 pigpio = "*"
+pytest = "*"
+pytest-mock = "*"
 
 [dev-packages]
 

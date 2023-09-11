@@ -66,7 +66,7 @@ else:
 confirm_config = input('\n[Y/n]: ')
 
 if confirm_config == 'n':
-    print('Please edit `config.py`')
+    print('Please edit `src/config.py`')
     print(SECTION_SEP)
     exit_message(before_cmd=True)
 
@@ -98,26 +98,22 @@ try:
         cmd: str = input('> ').lower()
         rt.cancel()
 
-        if cmd in ['quit', 'q', 'exit']: # If quit/q
+        if cmd in {'quit', 'q', 'exit'}: # If quit/q
             break
 
-        if cmd in ['?', 'help']: # If help/?
+        if cmd in {'?', 'help'}: # If help/?
             list_commands(COMMANDS.keys())
             continue
 
         if cmd.__contains__('gox') and not Enable_Gox:
-            print('\n--> You do not have GOX enabled, please close the program edit `config.py` to enable it\n')
+            print('\n--> You do not have GOX enabled, please close the program and edit `src/config.py` to enable it\n')
             continue
 
-        if not Get_State('ArmingTrigger') and ( cmd in ['open gox valve', 'start ignition', 'auto ignition'] ): # If not armed
+        if not Get_State('ArmingTrigger') and cmd in {'open gox valve', 'start ignition', 'auto ignition'}: # If not armed
             print('\n--> IGNITION IS NOT ARMED\n')
             continue
 
-        action: Any = unknown_command # Default to unknown
-        for com in list(COMMANDS.keys()):
-            if com[0] == cmd:
-                action: Any = COMMANDS.get(com) # If command exists in list
-                break
+        action: Any = COMMANDS.get(cmd, unknown_command) # Default to unknown
 
         action( pi, PINS )
 
