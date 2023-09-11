@@ -1,6 +1,6 @@
 from typing import Union
 from os import system
-from readline import set_pre_input_hook
+from readline import set_pre_input_hook # type: ignore
 
 states: dict[str, bool] = { # For pin states
 

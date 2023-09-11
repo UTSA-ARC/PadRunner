@@ -1,6 +1,8 @@
 *.lock
-src/__pycache__
+__pycache__
 .venv
 .history
 .config.py.swp
 ABORTED
+%*
+build

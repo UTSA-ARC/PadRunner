@@ -1,5 +1,11 @@
 {
     "python.languageServer": "Pylance",
     "python.analysis.typeCheckingMode": "basic",
-    "python.linting.pylintArgs": ["--generated-members", "from_json,query", "RPi.GPIO.*", "RPi._GPIO.*"]
+    "python.linting.pylintArgs": [
+        "--generated-members",
+        "from_json,query",
+        "RPi.GPIO.*",
+        "RPi._GPIO.*"
+    ],
+    "cmake.sourceDirectory": "E:/School/3rdYear/Clubs/ARC/Spaceport-2024/Ground-Support/PadRunner/mjpg-streamer-master/mjpg-streamer-experimental"
 }
