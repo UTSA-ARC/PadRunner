@@ -3,6 +3,8 @@
 from typing import Any # For typehinting
 from commands import * # For command headers
 
+DEVEL: bool = True
+
 # -------------------------------- Decor --------------------------------
 
 MOTD: str = '''

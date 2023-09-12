@@ -13,7 +13,7 @@ class RepeatTimer(th.Timer):
         while not self.finished.wait(self.interval):
             self.function(*self.args, **self.kwargs)
 
-def exit_message(pi: pigpio.pi, stop_event: th.Event = Any, watchdog_thread: th.Thread = Any, hard_abort: bool = False, before_cmd: bool = False,): # Exit program
+def exit_message(pi: pigpio.pi, stop_event: th.Event = Any, watchdog_thread: th.Thread = Any, hard_abort: bool = False, before_cmd: bool = False) -> None: # Exit program
     if Enable_Watchdog:
         stop_event.set()
         watchdog_thread.join()
@@ -29,7 +29,7 @@ def exit_message(pi: pigpio.pi, stop_event: th.Event = Any, watchdog_thread: th.
 
 # -------------------------------- Setup Helper Functions --------------------------------
 
-def print_confirmation(pi: pigpio.pi): # Prints confirmation of settings
+def print_confirmation(pi: pigpio.pi) -> None: # Prints confirmation of settings
     print('Are these values correct?\n')
 
     print(f' -  Watchdog Enable: {Enable_Watchdog}')
@@ -58,20 +58,25 @@ def print_confirmation(pi: pigpio.pi): # Prints confirmation of settings
 
 # -------------------------------- Start Function --------------------------------
 
-def start(): # Program Starter
+def start() -> None: # Program Starter
     clear()
     print(MOTD)
 
-    print('Setting up RPI board...\n')
-    pi = pigpio.pi() # Set rpi board
+    if not DEVEL:
+        print('Setting up RPI board...\n')
+        pi = pigpio.pi() # Set rpi board
 
-    for pin in PINS.values(): # Iterate through relay pins and make each an output
-        pi.set_mode(pin, pigpio.OUTPUT)
+        for pin in PINS.values(): # Iterate through relay pins and make each an output
+            pi.set_mode(pin, pigpio.OUTPUT)
+    
+    else:
+        pi = Any
 
     print('All Set!')
     print(SECTION_SEP)
     
-    print_confirmation(pi) # Print settings confirmation
+    if not DEVEL:
+        print_confirmation(pi) # Print settings confirmation
 
     stop_event: th.Event = th.Event() # Stop Event handler
     watchdog_stack: list = []
@@ -82,9 +87,10 @@ def start(): # Program Starter
         watchdog_thread.start()
         print("Started Watchdog Timer...")
 
-    print(SECTION_SEP)
-    Default_Pins( pi, PINS )
-    print(SECTION_SEP)
+    if not DEVEL:
+        print(SECTION_SEP)
+        Default_Pins( pi, PINS )
+        print(SECTION_SEP)
     print('Launching Console...')
     sleep(1)
     clear()
@@ -129,7 +135,7 @@ def check_special_cases(cmd) -> bool:
 def get_cmds(cmd) -> Any: # Get commands
     return COMMANDS.get(cmd, unknown_command) # Default to unknown
 
-def auto_ignition_sequence(pi: pigpio.pi): # Auto Ignition Sequence
+def auto_ignition_sequence(pi: pigpio.pi) -> None: # Auto Ignition Sequence
     ignition( pi, PINS )
     if Enable_Gox:
         print(f'Wating for {GOX_Open_Delay} seconds to open GOX...')
@@ -144,7 +150,7 @@ def auto_ignition_sequence(pi: pigpio.pi): # Auto Ignition Sequence
 
 # ---- Sequences --------------------------------
 
-def abort_sequence(cmd: str, pi: pigpio.pi, stop_event: th.Event, watchdog_thread: th.Thread): # Abort Sequence
+def abort_sequence(cmd: str, pi: pigpio.pi, stop_event: th.Event, watchdog_thread: th.Thread) -> None: # Abort Sequence
     Default_Pins( pi, PINS )
     print('-->!!ABORTED!!\n')
 
@@ -154,7 +160,7 @@ def abort_sequence(cmd: str, pi: pigpio.pi, stop_event: th.Event, watchdog_threa
 
 # -------------------------------- Main Loop --------------------------------
 
-def loop( pi: pigpio.pi, stop_event: th.Event, watchdog_stack: list, watchdog_thread: th.Thread) -> None: # Main loop
+def loop(pi: pigpio.pi, stop_event: th.Event, watchdog_stack: list, watchdog_thread: th.Thread) -> None: # Main loop
     try:
         while not stop_event.is_set(): # Until stopped
 
@@ -180,5 +186,6 @@ def loop( pi: pigpio.pi, stop_event: th.Event, watchdog_stack: list, watchdog_th
     except Exception:
         sleep(0)
     exit_message(pi, stop_event, watchdog_thread)
-    
-start() # Start Program
+
+if not DEVEL:    
+    start() # Start Program

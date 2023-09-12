@@ -7,5 +7,10 @@
         "RPi.GPIO.*",
         "RPi._GPIO.*"
     ],
-    "cmake.sourceDirectory": "E:/School/3rdYear/Clubs/ARC/Spaceport-2024/Ground-Support/PadRunner/mjpg-streamer-master/mjpg-streamer-experimental"
+    "cmake.sourceDirectory": "E:/School/3rdYear/Clubs/ARC/Spaceport-2024/Ground-Support/PadRunner/mjpg-streamer-master/mjpg-streamer-experimental",
+    "python.testing.pytestArgs": [
+        "test"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

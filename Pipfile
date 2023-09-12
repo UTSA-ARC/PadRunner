@@ -7,6 +7,7 @@ name = "pypi"
 pigpio = "*"
 pytest = "*"
 pytest-mock = "*"
+pyreadline3 = "*"
 
 [dev-packages]
 
