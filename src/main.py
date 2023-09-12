@@ -4,7 +4,7 @@ from time import sleep # For delays
 from os import _exit
 
 from config import * # Import config, commands and Any type
-from watchdog import check_connection # Check connection
+from watchdog import wd_runner # Check connection
 
 class RepeatTimer(th.Timer):
     def run(self):
@@ -75,7 +75,7 @@ print(SECTION_SEP)
 stop_event: th.Event = th.Event() # Stop Event handler
 watchdog_stack: list = []
 watchdog_lock: th.Lock = th.Lock()
-watchdog_thread = th.Thread(target=check_connection, args=(stop_event, watchdog_stack, watchdog_lock, Watchdog_Timout_Delay)) # Instantiate watchdog thread
+watchdog_thread = th.Thread(target=wd_runner, args=(stop_event, watchdog_stack, watchdog_lock, Watchdog_Timout_Delay)) # Instantiate watchdog thread
 
 if Enable_Watchdog:
     watchdog_thread.start()
