@@ -3,6 +3,8 @@
 from typing import Any # For typehinting
 from commands import * # For command headers
 
+# -------------------------------- Decor --------------------------------
+
 MOTD: str = '''
 ------------
 ~~ARC Ground Support PI Software~~
@@ -10,6 +12,8 @@ MOTD: str = '''
 '''
 
 SECTION_SEP: str = '\n------------\n'
+
+# -------------------------------- Flags/Params --------------------------------
 
 Enable_Watchdog: bool = True #* Enable Watchdog Timer
 Watchdog_Check_Interval: float = 1  #* In Seconds
@@ -19,6 +23,8 @@ Enable_Gox: bool = True #* Enable GOX valve
 GOX_Open_Delay: float = 0.25 #* In Seconds
 
 Pins_Close_Delay: float = 3.0 #* In Seconds
+
+# -------------------------------- Dicts --------------------------------
 
 PINS: dict[str, int] = { # Pin Dict
 

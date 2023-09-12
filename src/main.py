@@ -1,10 +1,12 @@
 import pigpio # GPIO access
 import threading as th # To run the console
 from time import sleep # For delays
-from os import _exit
+from os import _exit # Exit program
 
 from config import * # Import config, commands and Any type
 from watchdog import wd_runner # Check connection
+
+# -------------------------------- Global Helper Functions --------------------------------
 
 class RepeatTimer(th.Timer):
     def run(self):
@@ -24,6 +26,8 @@ def exit_message(pi: pigpio.pi, stop_event: th.Event = Any, watchdog_thread: th.
     print('Byee!!')
     sleep(1)
     _exit(0)
+
+# -------------------------------- Setup Helper Functions --------------------------------
 
 def print_confirmation(pi: pigpio.pi): # Prints confirmation of settings
     print('Are these values correct?\n')
@@ -51,6 +55,8 @@ def print_confirmation(pi: pigpio.pi): # Prints confirmation of settings
         exit_message(pi, before_cmd=True)
 
     print(SECTION_SEP)
+
+# -------------------------------- Start Function --------------------------------
 
 def start(): # Program Starter
     clear()
@@ -86,6 +92,8 @@ def start(): # Program Starter
     
     loop(pi, stop_event, watchdog_stack, watchdog_thread) # Start Main Loop
 
+# -------------------------------- Loop Helper Functions --------------------------------
+
 def check_wd(s: list, pi: pigpio.pi, stop_event: th.Event, watchdog_thread: th.Thread) -> None: # Check watchdog thread for abort
     got = ''
     if s.__len__() != 0 : got = s.pop()
@@ -110,7 +118,7 @@ def check_special_cases(cmd) -> bool:
     if cmd in {'?', 'help'}: # If help/?
         list_commands(COMMANDS.keys())
 
-    if cmd.__contains__('gox') and not Enable_Gox:
+    if cmd.__contains__('gox') and not Enable_Gox: # If GOX not enabled
         print('\n--> You do not have GOX enabled, please close the program and edit `src/config.py` to enable it\n')
 
     if not Get_State('ArmingTrigger') and cmd in {'open gox valve', 'start ignition', 'auto ignition'}: # If not armed
@@ -134,6 +142,8 @@ def auto_ignition_sequence(pi: pigpio.pi): # Auto Ignition Sequence
     print(SECTION_SEP)
     print('--> Auto Ignition Sequence Completed\n')
 
+# ---- Sequences --------------------------------
+
 def abort_sequence(cmd: str, pi: pigpio.pi, stop_event: th.Event, watchdog_thread: th.Thread): # Abort Sequence
     Default_Pins( pi, PINS )
     print('-->!!ABORTED!!\n')
@@ -142,9 +152,11 @@ def abort_sequence(cmd: str, pi: pigpio.pi, stop_event: th.Event, watchdog_threa
         system('touch ~/PICode/ABORTED')
         exit_message(pi, stop_event, watchdog_thread, hard_abort=True)
 
+# -------------------------------- Main Loop --------------------------------
+
 def loop( pi: pigpio.pi, stop_event: th.Event, watchdog_stack: list, watchdog_thread: th.Thread) -> None: # Main loop
     try:
-        while not stop_event.is_set(): # Main Loop
+        while not stop_event.is_set(): # Until stopped
 
             cmd: str = get_user_cmd(pi, watchdog_stack, stop_event, watchdog_thread) # Get command from user
 
